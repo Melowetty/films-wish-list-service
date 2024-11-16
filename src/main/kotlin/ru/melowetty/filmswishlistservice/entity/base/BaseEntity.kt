@@ -1,9 +1,10 @@
-package ru.melowetty.filmswishlistservice.entity
+package ru.melowetty.filmswishlistservice.entity.base
 
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
+import org.bouncycastle.util.Objects
 import org.springframework.data.util.ProxyUtils
 
 @MappedSuperclass
@@ -24,7 +25,7 @@ abstract class BaseEntity<T> {
         return this.id != null && this.id == other.id
     }
 
-    override fun hashCode() = 25
+    override fun hashCode() = Objects.hashCode(id)
 
     override fun toString(): String {
         return "${this.javaClass.simpleName}(id=$id)"

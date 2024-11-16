@@ -1,4 +1,4 @@
-package ru.melowetty.filmswishlistservice.entity
+package ru.melowetty.filmswishlistservice.entity.base
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
