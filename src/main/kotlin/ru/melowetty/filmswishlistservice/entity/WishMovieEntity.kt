@@ -4,6 +4,8 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.time.LocalDateTime
+import org.springframework.data.annotation.CreatedDate
 import ru.melowetty.filmswishlistservice.entity.base.BaseEntity
 
 @Entity
@@ -20,4 +22,8 @@ class WishMovieEntity : BaseEntity<Long>() {
 
     @Column
     var userRating: Int? = null
+
+    @CreatedDate
+    @Column(updatable = false, nullable = false)
+    lateinit var created: LocalDateTime
 }
