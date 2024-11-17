@@ -4,6 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.ManyToMany
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -21,6 +22,10 @@ class UserEntity : UserDetails, BaseAuditEntity<Long>() {
     @Column
     @ManyToMany(fetch = FetchType.EAGER)
     val roles: MutableSet<RoleEntity> = mutableSetOf()
+
+    @Column
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private val wishMovies: MutableList<WishMovieEntity> = mutableListOf()
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return roles
