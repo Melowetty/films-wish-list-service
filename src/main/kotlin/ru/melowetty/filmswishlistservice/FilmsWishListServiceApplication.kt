@@ -8,4 +8,6 @@ class FilmsWishListServiceApplication
 
 fun main(args: Array<String>) {
     runApplication<FilmsWishListServiceApplication>(*args)
+    //http://www.omdbapi.com/?plot=full&i=tt10048342
+    //http://www.omdbapi.com/?plot=full&i=tt0468569
 }
