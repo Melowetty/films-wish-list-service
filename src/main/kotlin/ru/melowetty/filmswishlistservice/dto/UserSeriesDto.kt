@@ -3,7 +3,7 @@ package ru.melowetty.filmswishlistservice.dto
 import java.time.LocalDateTime
 import ru.melowetty.filmswishlistservice.model.Rating
 
-data class SeriesDto(
+data class UserSeriesDto(
     override val title: String,
     override val imdbId: String,
     override val rating: Rating,
@@ -21,4 +21,4 @@ data class SeriesDto(
     override val isWished: Boolean,
     override val wishDetails: WishDetailsDto,
     val seasonsCount: Int,
-) : MovieDto()
+) : UserMovieDto()
