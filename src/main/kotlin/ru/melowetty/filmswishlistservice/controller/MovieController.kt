@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/films")
-class FilmController {
+@RequestMapping("/movies")
+class MovieController {
     @GetMapping("/search")
-    fun searchFilm(
+    fun searchMovie(
         @RequestParam(name = "query")
-        @NotBlank(message = "{film.search.request.query.is-blank}")
-        @Length(min = 2, max = 64, message = "{film.search.request.query.bad-length}")
+        @NotBlank(message = "{movie.search.request.query.is-blank}")
+        @Length(min = 2, max = 64, message = "{movie.search.request.query.bad-length}")
         query: String
     ) : String {
         return "test"
