@@ -18,6 +18,8 @@ abstract class MovieDto {
     abstract val durationInMinutes: Int
     abstract val posterLink: String
     abstract val imdbRating: Float
+    abstract val isWished: Boolean
+    abstract val wishDetails: WishDetailsDto
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -38,6 +40,8 @@ abstract class MovieDto {
         if (durationInMinutes != other.durationInMinutes) return false
         if (posterLink != other.posterLink) return false
         if (imdbRating != other.imdbRating) return false
+        if (isWished != other.isWished) return false
+        if (wishDetails != other.wishDetails) return false
 
         return true
     }
@@ -56,6 +60,8 @@ abstract class MovieDto {
         result = 31 * result + durationInMinutes
         result = 31 * result + posterLink.hashCode()
         result = 31 * result + imdbRating.hashCode()
+        result = 31 * result + isWished.hashCode()
+        result = 31 * result + wishDetails.hashCode()
         return result
     }
 

@@ -18,5 +18,7 @@ data class SeriesDto(
     override val durationInMinutes: Int,
     override val posterLink: String,
     override val imdbRating: Float,
+    override val isWished: Boolean,
+    override val wishDetails: WishDetailsDto,
     val seasonsCount: Int,
 ) : MovieDto()
