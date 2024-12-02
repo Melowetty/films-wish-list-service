@@ -1,6 +1,7 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.retry.support.RetryTemplate
 import org.springframework.stereotype.Service
@@ -10,14 +11,20 @@ import org.springframework.web.util.UriComponentsBuilder
 import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
 import ru.melowetty.filmswishlistservice.model.ExternalMovie
 import ru.melowetty.filmswishlistservice.model.ExternalShortMovie
+import ru.melowetty.filmswishlistservice.model.Language
+import ru.melowetty.filmswishlistservice.model.LocalizedData
 import ru.melowetty.filmswishlistservice.model.MovieType
 import ru.melowetty.filmswishlistservice.service.ExternalMovieService
+import ru.melowetty.filmswishlistservice.service.TranslatorService
 
 @Service
 class OmdbExternalMovieService(
     private val restTemplate: RestTemplate,
-    private val retryTemplate: RetryTemplate
+    private val retryTemplate: RetryTemplate,
+    private val translatorService: TranslatorService
 ) : ExternalMovieService {
+    private val logger = KotlinLogging.logger {  }
+
     @Value("\${api.omdb.base-url}")
     private lateinit var baseUrl: String
 
@@ -25,6 +32,7 @@ class OmdbExternalMovieService(
     private lateinit var apiKey: String
 
     override fun searchMovie(query: String): List<ExternalShortMovie> {
+        logger.info { "Получение данных из OMDB" }
         val uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
             .queryParam("apiKey", apiKey)
             .queryParam("s", query)
@@ -36,10 +44,20 @@ class OmdbExternalMovieService(
         } ?: throw ExternalApiErrorException("api.omdb.search.parse-error")
 
         if (response.response.not()) return listOf()
+        if (response.search == null) {
+            throw ExternalApiErrorException("api.omdb.search.parse-error")
+        }
 
-        return response.search!!.map {
+        val translatedTitles = translatorService.translate(Language.ENGLISH, Language.RUSSIAN, response.search.map { it.title })
+
+        return response.search.mapIndexed {index, it ->
+            val originalTitle = it.title
+            val translatedTitle = translatedTitles[index]
             ExternalShortMovie(
-                title = it.title,
+                title = LocalizedData(
+                    english = originalTitle,
+                    russian = translatedTitle,
+                ),
                 imdbId = it.imdbId,
                 year = it.year.toInt(),
                 rating = null,
@@ -64,6 +82,7 @@ class OmdbExternalMovieService(
     }
 
     override fun getMovieByImdbId(imdbId: String): ExternalMovie {
+        logger.info { "Получение данных из OMDB" }
         TODO("Not yet implemented")
     }
 
