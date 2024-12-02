@@ -1,13 +1,24 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
+import mu.KotlinLogging
+import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import ru.melowetty.filmswishlistservice.dto.UserMovieDto
 import ru.melowetty.filmswishlistservice.dto.UserMovieShortDto
+import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
+import ru.melowetty.filmswishlistservice.exception.LocalizedException
+import ru.melowetty.filmswishlistservice.service.ExternalMovieService
 import ru.melowetty.filmswishlistservice.service.UserMovieService
 
 @Service
-class UserMovieServiceImpl : UserMovieService {
+class UserMovieServiceImpl(
+    private val externalMovieService: ExternalMovieService
+) : UserMovieService {
+    private val logging = KotlinLogging.logger {  }
+
     override fun searchMovie(query: String): List<UserMovieShortDto> {
+        logging.info { externalMovieService.searchMovie(query) }
         TODO("Not yet implemented")
     }
 

@@ -1,0 +1,4 @@
+api:
+  omdb:
+    base-url: https://omdbapi.com
+    api-key: ${OMDB_API_KEY}
