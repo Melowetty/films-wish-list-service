@@ -1,14 +1,14 @@
 package ru.melowetty.filmswishlistservice.model
 
 data class ExternalShortMovie(
-    val title: String,
+    val title: LocalizedData,
     val imdbId: String,
     val year: Int,
     val rating: Rating?,
-    val genres: List<String>?,
-    val countries: List<String>?,
-    val directors: List<String>?,
-    val actors: List<String>?,
+    val genres: List<LocalizedData>?,
+    val countries: List<LocalizedData>?,
+    val directors: List<LocalizedData>?,
+    val actors: List<LocalizedData>?,
     val durationInMinutes: Int?,
     val posterLink: String,
     val imdbRating: Float?,

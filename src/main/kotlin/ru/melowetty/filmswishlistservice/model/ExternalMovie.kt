@@ -4,17 +4,17 @@ import java.time.LocalDateTime
 
 abstract class ExternalMovie {
     abstract val imdbId: String
-    abstract val title: String
-    abstract val description: String
+    abstract val title: LocalizedData
+    abstract val description: LocalizedData
     abstract val rating: Rating
     abstract val year: Int
     abstract val released: LocalDateTime
-    abstract val genres: List<String>
-    abstract val countries: List<String>
-    abstract val directors: List<String>
-    abstract val writers: List<String>
-    abstract val actors: List<String>
-    abstract val languages: List<String>
+    abstract val genres: List<LocalizedData>
+    abstract val countries: List<LocalizedData>
+    abstract val directors: List<LocalizedData>
+    abstract val writers: List<LocalizedData>
+    abstract val actors: List<LocalizedData>
+    abstract val languages: List<LocalizedData>
     abstract val durationInMinutes: Int
     abstract val posterLink: String
     abstract val imdbRating: Float
