@@ -5,6 +5,7 @@ import ru.melowetty.filmswishlistservice.model.Rating
 
 data class UserSeriesDto(
     override val title: String,
+    override val description: String,
     override val imdbId: String,
     override val rating: Rating,
     override val year: Int,

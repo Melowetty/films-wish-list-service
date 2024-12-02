@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 data class ExternalFilm(
     override val imdbId: String,
     override val title: String,
+    override val description: String,
     override val rating: Rating,
     override val year: Int,
     override val released: LocalDateTime,

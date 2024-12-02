@@ -6,6 +6,7 @@ import ru.melowetty.filmswishlistservice.model.Rating
 abstract class UserMovieDto {
     abstract val imdbId: String
     abstract val title: String
+    abstract val description: String
     abstract val rating: Rating
     abstract val year: Int
     abstract val released: LocalDateTime
@@ -28,6 +29,7 @@ abstract class UserMovieDto {
         other as UserMovieDto
 
         if (title != other.title) return false
+        if (description != other.description) return false
         if (imdbId != other.imdbId) return false
         if (rating != other.rating) return false
         if (released != other.released) return false
@@ -49,6 +51,7 @@ abstract class UserMovieDto {
     override fun hashCode(): Int {
         var result = imdbId.hashCode()
         result = 31 * result + title.hashCode()
+        result = 31 * result + description.hashCode()
         result = 31 * result + rating.hashCode()
         result = 31 * result + released.hashCode()
         result = 31 * result + genres.hashCode()
