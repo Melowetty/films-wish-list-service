@@ -53,13 +53,16 @@ class OmdbExternalMovieService(
         return response.search.mapIndexed {index, it ->
             val originalTitle = it.title
             val translatedTitle = translatedTitles[index]
+
+            val year = it.year.split("–").first().toInt()
+
             ExternalShortMovie(
                 title = LocalizedData(
                     english = originalTitle,
                     russian = translatedTitle,
                 ),
                 imdbId = it.imdbId,
-                year = it.year.toInt(),
+                year = year,
                 rating = null,
                 genres = null,
                 countries = null,
