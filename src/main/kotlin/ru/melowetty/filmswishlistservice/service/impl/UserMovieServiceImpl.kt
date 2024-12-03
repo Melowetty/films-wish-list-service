@@ -1,13 +1,9 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
 import mu.KotlinLogging
-import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 import ru.melowetty.filmswishlistservice.dto.UserMovieDto
 import ru.melowetty.filmswishlistservice.dto.UserMovieShortDto
-import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
-import ru.melowetty.filmswishlistservice.exception.LocalizedException
 import ru.melowetty.filmswishlistservice.service.ExternalMovieService
 import ru.melowetty.filmswishlistservice.service.UserMovieService
 
