@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service
 import ru.melowetty.filmswishlistservice.dto.UserDto
 import ru.melowetty.filmswishlistservice.entity.UserEntity
 import ru.melowetty.filmswishlistservice.exception.InvalidUserDataException
-import ru.melowetty.filmswishlistservice.exception.LocalizedException
 import ru.melowetty.filmswishlistservice.exception.UserNotFoundException
 import ru.melowetty.filmswishlistservice.mapper.UserMapper
 import ru.melowetty.filmswishlistservice.model.GoogleOAuthUser

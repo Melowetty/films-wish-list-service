@@ -11,7 +11,7 @@ import ru.melowetty.filmswishlistservice.service.UserMovieService
 class UserMovieServiceImpl(
     private val externalMovieService: ExternalMovieService
 ) : UserMovieService {
-    private val logging = KotlinLogging.logger {  }
+    private val logging = KotlinLogging.logger { }
 
     override fun searchMovie(query: String): List<UserMovieShortDto> {
         logging.info { externalMovieService.searchMovie(query) }

@@ -20,12 +20,16 @@ class ExceptionHandlerController(
         for (result in e.allValidationResults) {
             val param = result.methodParameter.parameterName ?: continue
             for (error in result.resolvableErrors) {
-                errors.add(Error(param,error.defaultMessage ?: continue))
+                errors.add(Error(param, error.defaultMessage ?: continue))
             }
         }
 
-        return ResponseEntity.badRequest().body(ErrorMessageResponse(HttpStatus.BAD_REQUEST.value(),
-            "VALIDATION", errors))
+        return ResponseEntity.badRequest().body(
+            ErrorMessageResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "VALIDATION", errors
+            )
+        )
     }
 
     @ExceptionHandler
@@ -33,8 +37,12 @@ class ExceptionHandlerController(
         val locale = LocaleContextHolder.getLocale()
         val localizedMessage = messageSource.getMessage(e.template, e.params, locale)
 
-        return ResponseEntity.status(e.status).body(ErrorMessageResponse(e.status.value(),
-            errorType = e.code, errors = listOf(localizedMessage)))
+        return ResponseEntity.status(e.status).body(
+            ErrorMessageResponse(
+                e.status.value(),
+                errorType = e.code, errors = listOf(localizedMessage)
+            )
+        )
     }
 
     data class Error(

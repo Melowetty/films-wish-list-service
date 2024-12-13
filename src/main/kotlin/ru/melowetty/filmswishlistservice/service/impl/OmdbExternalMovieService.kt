@@ -23,7 +23,7 @@ class OmdbExternalMovieService(
     private val retryTemplate: RetryTemplate,
     private val translatorService: TranslatorService
 ) : ExternalMovieService {
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
 
     @Value("\${api.omdb.base-url}")
     private lateinit var baseUrl: String
@@ -48,9 +48,10 @@ class OmdbExternalMovieService(
             throw ExternalApiErrorException("api.omdb.search.parse-error")
         }
 
-        val translatedTitles = translatorService.translate(Language.ENGLISH, Language.RUSSIAN, response.search.map { it.title })
+        val translatedTitles =
+            translatorService.translate(Language.ENGLISH, Language.RUSSIAN, response.search.map { it.title })
 
-        return response.search.mapIndexed {index, it ->
+        return response.search.mapIndexed { index, it ->
             val originalTitle = it.title
             val translatedTitle = translatedTitles[index]
 

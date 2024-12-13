@@ -1,8 +1,15 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.filter
+import kotlin.collections.forEach
+import kotlin.collections.forEachIndexed
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
+import kotlin.collections.set
 import mu.KotlinLogging
 import org.springframework.cache.CacheManager
-import org.springframework.cache.get
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import ru.melowetty.filmswishlistservice.model.Language
@@ -14,7 +21,7 @@ class CacheableTranslatorService(
     private val translatorService: TranslatorService,
     private val cacheManager: CacheManager
 ) : TranslatorService {
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
 
     override fun translate(from: Language, to: Language, texts: List<String>): List<String> {
         val cache = cacheManager.getCache("translations") ?: return directTranslate(from, to, texts)
@@ -32,7 +39,7 @@ class CacheableTranslatorService(
         if (nonCachedValues.isNotEmpty()) {
             logger.info { "Получение переводов из внешнего источника" }
             val newTranslations = directTranslate(from, to, nonCachedValues)
-            newTranslations.forEachIndexed {index, element ->
+            newTranslations.forEachIndexed { index, element ->
                 translates[nonCachedValues[index]] = element
             }
         }
@@ -46,7 +53,7 @@ class CacheableTranslatorService(
         val result = translatorService.translate(from, to, texts)
         val cache = cacheManager.getCache("translations") ?: return result
 
-        result.forEachIndexed {index, element ->
+        result.forEachIndexed { index, element ->
             cache.put(texts[index], element)
         }
 

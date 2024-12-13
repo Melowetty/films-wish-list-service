@@ -13,7 +13,7 @@ import ru.melowetty.filmswishlistservice.service.ExternalMovieService
 class CacheableExternalMovieService(
     private val externalMovieService: ExternalMovieService
 ) : ExternalMovieService {
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
 
     @Cacheable("responses")
     override fun searchMovie(query: String): List<ExternalShortMovie> {

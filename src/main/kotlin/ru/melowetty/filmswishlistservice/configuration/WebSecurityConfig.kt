@@ -16,15 +16,15 @@ import ru.melowetty.filmswishlistservice.service.impl.GoogleOAuthService
 
 @Configuration
 @EnableWebSecurity
-class WebSecurityConfig(
-) {
+class WebSecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity, oAuthService: GoogleOAuthService): SecurityFilterChain {
         return http
             .csrf { it.disable() }
-            .authorizeHttpRequests { auth -> auth
-                .requestMatchers("/", "/auth**").permitAll()
-                .anyRequest().authenticated()
+            .authorizeHttpRequests { auth ->
+                auth
+                    .requestMatchers("/", "/auth**").permitAll()
+                    .anyRequest().authenticated()
             }
             .oauth2Login {
                 it.userInfoEndpoint {
