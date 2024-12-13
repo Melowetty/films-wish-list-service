@@ -13,54 +13,54 @@ import ru.melowetty.filmswishlistservice.model.Rating
 
 @Entity
 @Table(name = "movie")
-class MovieEntity : BaseAuditEntity<Long>() {
-
+class MovieEntity(
     @Column(nullable = false)
     @NaturalId
-    lateinit var imdbId: String
+    val imdbId: String,
 
     @Column(nullable = false)
-    lateinit var title: String
+    var title: String,
 
     @Column(nullable = false)
-    var year: Int = 0
+    val year: Int,
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    lateinit var rating: Rating
+    var rating: Rating,
 
     @Column(nullable = false)
-    lateinit var released: LocalDateTime
+    var released: LocalDateTime,
 
     @ManyToMany
-    val genres: MutableSet<GenreEntity> = mutableSetOf()
+    val genres: MutableSet<GenreEntity> = mutableSetOf(),
 
     @ManyToMany
-    val countries: MutableSet<CountryEntity> = mutableSetOf()
+    val countries: MutableSet<CountryEntity> = mutableSetOf(),
 
     @ManyToMany
-    val directors: MutableList<DirectorEntity> = mutableListOf()
+    val directors: MutableList<DirectorEntity> = mutableListOf(),
 
     @ManyToMany
-    val writers: MutableList<WriterEntity> = mutableListOf()
+    val writers: MutableList<WriterEntity> = mutableListOf(),
 
     @ManyToMany
-    val actors: MutableList<ActorEntity> = mutableListOf()
+    val actors: MutableList<ActorEntity> = mutableListOf(),
 
     @ManyToMany
-    val languages: MutableSet<LanguageEntity> = mutableSetOf()
+    val languages: MutableSet<LanguageEntity> = mutableSetOf(),
 
     @Column(name = "duration", nullable = false)
-    var durationInMinutes: Int = 0
+    var durationInMinutes: Int,
 
     @Column(nullable = false)
-    lateinit var description: String
+    var description: String,
 
     @Column(nullable = false)
-    lateinit var posterLink: String
+    var posterLink: String,
 
     @Column(nullable = false)
-    var imdbRating: Float = 0f
+    var imdbRating: Float,
+) : BaseAuditEntity<Long>() {
 
     override fun hashCode(): Int {
         return imdbId.hashCode()

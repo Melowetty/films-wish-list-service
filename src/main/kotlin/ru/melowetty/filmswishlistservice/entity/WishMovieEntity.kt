@@ -10,20 +10,19 @@ import ru.melowetty.filmswishlistservice.entity.base.BaseEntity
 
 @Entity
 @Table(name = "wish_movie")
-class WishMovieEntity : BaseEntity<Long>() {
+class WishMovieEntity(
     @ManyToOne
-    lateinit var user: UserEntity
+    val user: UserEntity,
 
     @ManyToOne
-    lateinit var movie: MovieEntity
+    val movie: MovieEntity,
 
     @Column(nullable = false)
-    var isWatched: Boolean = false
+    var isWatched: Boolean,
 
     @Column
-    var userRating: Int? = null
+    var userRating: Int?,
 
-    @CreatedDate
     @Column(updatable = false, nullable = false)
-    lateinit var created: LocalDateTime
-}
+    var created: LocalDateTime = LocalDateTime.now()
+) : BaseEntity<Long>()

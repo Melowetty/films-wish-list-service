@@ -8,10 +8,12 @@ import ru.melowetty.filmswishlistservice.entity.base.BaseNamedEntity
 
 @Entity
 @Table(name = "country")
-class CountryEntity : BaseNamedEntity<Long>() {
+class CountryEntity(
+    name: String,
+
     @ManyToMany(
         mappedBy = "countries",
         fetch = FetchType.LAZY
     )
-    var movies: MutableSet<MovieEntity> = mutableSetOf()
-}
+    val movies: MutableSet<MovieEntity> = mutableSetOf()
+) : BaseNamedEntity<Long>(name)
