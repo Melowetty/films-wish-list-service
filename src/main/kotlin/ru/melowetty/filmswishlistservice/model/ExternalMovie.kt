@@ -1,6 +1,6 @@
 package ru.melowetty.filmswishlistservice.model
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 abstract class ExternalMovie {
     abstract val imdbId: String
@@ -8,7 +8,7 @@ abstract class ExternalMovie {
     abstract val description: LocalizedData
     abstract val rating: Rating
     abstract val year: Int
-    abstract val released: LocalDateTime
+    abstract val released: LocalDate
     abstract val genres: List<LocalizedData>
     abstract val countries: List<LocalizedData>
     abstract val directors: List<LocalizedData>

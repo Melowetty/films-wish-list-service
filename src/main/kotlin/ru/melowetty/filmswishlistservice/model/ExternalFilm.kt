@@ -1,6 +1,6 @@
 package ru.melowetty.filmswishlistservice.model
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class ExternalFilm(
     override val imdbId: String,
@@ -8,7 +8,7 @@ data class ExternalFilm(
     override val description: LocalizedData,
     override val rating: Rating,
     override val year: Int,
-    override val released: LocalDateTime,
+    override val released: LocalDate,
     override val genres: List<LocalizedData>,
     override val countries: List<LocalizedData>,
     override val directors: List<LocalizedData>,

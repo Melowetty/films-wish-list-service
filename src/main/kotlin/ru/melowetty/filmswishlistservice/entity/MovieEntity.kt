@@ -6,7 +6,7 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.Table
-import java.time.LocalDateTime
+import java.time.LocalDate
 import org.hibernate.annotations.NaturalId
 import ru.melowetty.filmswishlistservice.entity.base.BaseAuditEntity
 import ru.melowetty.filmswishlistservice.model.Rating
@@ -29,7 +29,7 @@ class MovieEntity(
     var rating: Rating,
 
     @Column(nullable = false)
-    var released: LocalDateTime,
+    var released: LocalDate,
 
     @ManyToMany
     val genres: MutableSet<GenreEntity> = mutableSetOf(),
