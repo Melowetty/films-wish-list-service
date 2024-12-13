@@ -2,26 +2,43 @@ package ru.melowetty.filmswishlistservice.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer.UserDetailsBuilder
+import org.springframework.security.config.Customizer
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
+import org.springframework.security.web.SecurityFilterChain
 import ru.melowetty.filmswishlistservice.service.UserService
+import ru.melowetty.filmswishlistservice.service.impl.GoogleOAuthService
+
 
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-    private val userService: UserService
 ) {
     @Bean
-    fun authenticationProvider(): AuthenticationProvider {
+    fun filterChain(http: HttpSecurity, oAuthService: GoogleOAuthService): SecurityFilterChain {
+        return http
+            .csrf { it.disable() }
+            .authorizeHttpRequests { auth -> auth
+                .requestMatchers("/", "/auth**").permitAll()
+                .anyRequest().authenticated()
+            }
+            .oauth2Login {
+                it.userInfoEndpoint {
+                    it.userService {
+                        oAuthService.loadUser(it)
+                    }
+                }
+            }
+            .httpBasic(Customizer.withDefaults())
+            .build()
+    }
+
+    @Bean
+    fun authenticationProvider(userService: UserService): AuthenticationProvider {
         val authProvider = DaoAuthenticationProvider()
 
         authProvider.setUserDetailsService(userService)

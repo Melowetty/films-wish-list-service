@@ -8,8 +8,6 @@ import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
-import jakarta.persistence.JoinColumns
-import jakarta.persistence.ManyToMany
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.springframework.security.core.GrantedAuthority
@@ -20,25 +18,26 @@ import ru.melowetty.filmswishlistservice.model.Role
 
 @Entity
 @Table(name = "users")
-class UserEntity : UserDetails, BaseAuditEntity<Long>() {
+class UserEntity(
     @Column(unique = true, nullable = false)
-    private lateinit var username: String
+    private var username: String,
 
     @Column(nullable = false)
-    private lateinit var password: String
+    private var password: String,
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = [JoinColumn(name = "user_id")])
-    val roles: MutableList<Role> = mutableListOf()
+    val roles: MutableList<Role> = mutableListOf(),
 
     @Enumerated(value = EnumType.STRING)
-    lateinit var provider: Provider
+    var provider: Provider,
 
     @Column
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private val wishMovies: MutableList<WishMovieEntity> = mutableListOf()
+    val wishMovies: MutableList<WishMovieEntity> = mutableListOf()
 
+) : UserDetails, BaseAuditEntity<Long>() {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return roles
     }

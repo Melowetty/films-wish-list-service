@@ -13,9 +13,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 abstract class BaseAuditEntity<T> : BaseEntity<T>() {
     @CreatedDate
     @Column(updatable = false, nullable = false)
-    lateinit var created: LocalDateTime
+    var created: LocalDateTime = LocalDateTime.now()
 
     @LastModifiedDate
     @Column(nullable = false)
-    lateinit var modified: LocalDateTime
+    var modified: LocalDateTime = LocalDateTime.now()
 }
