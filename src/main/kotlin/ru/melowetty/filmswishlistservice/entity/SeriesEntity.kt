@@ -28,6 +28,9 @@ class SeriesEntity(
 
     @Column(name = "seasons_count")
     var seasonsCount: Int,
+
+    @Column(name = "last_year")
+    var lastYear: Int,
     ) : MovieEntity(imdbId, title, year, rating, released, genres, countries,
     directors, writers, actors, languages,
     durationInMinutes = durationInMinutes,
