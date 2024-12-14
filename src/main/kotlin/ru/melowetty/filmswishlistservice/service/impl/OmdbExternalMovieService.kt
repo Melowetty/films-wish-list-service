@@ -1,6 +1,8 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDate
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.retry.support.RetryTemplate
@@ -9,13 +11,18 @@ import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
+import ru.melowetty.filmswishlistservice.model.BufferedTranslateTask
+import ru.melowetty.filmswishlistservice.model.ExternalFilm
 import ru.melowetty.filmswishlistservice.model.ExternalMovie
+import ru.melowetty.filmswishlistservice.model.ExternalSeries
 import ru.melowetty.filmswishlistservice.model.ExternalShortMovie
 import ru.melowetty.filmswishlistservice.model.Language
 import ru.melowetty.filmswishlistservice.model.LocalizedData
 import ru.melowetty.filmswishlistservice.model.MovieType
+import ru.melowetty.filmswishlistservice.model.Rating
 import ru.melowetty.filmswishlistservice.service.ExternalMovieService
 import ru.melowetty.filmswishlistservice.service.TranslatorService
+import ru.melowetty.filmswishlistservice.structure.BufferedTranslator
 
 @Service
 class OmdbExternalMovieService(
@@ -32,7 +39,6 @@ class OmdbExternalMovieService(
     private lateinit var apiKey: String
 
     override fun searchMovie(query: String): List<ExternalShortMovie> {
-        logger.info { "Получение данных из OMDB" }
         val uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
             .queryParam("apiKey", apiKey)
             .queryParam("s", query)
@@ -55,7 +61,9 @@ class OmdbExternalMovieService(
             val originalTitle = it.title
             val translatedTitle = translatedTitles[index]
 
-            val year = it.year.split("–").first().toInt()
+            val years = it.year.split("-")
+            val year = years.first().toInt()
+            val lastYear = years.getOrNull(1)?.toInt()
 
             ExternalShortMovie(
                 title = LocalizedData(
@@ -64,6 +72,7 @@ class OmdbExternalMovieService(
                 ),
                 imdbId = it.imdbId,
                 year = year,
+                lastYear = lastYear,
                 rating = null,
                 genres = null,
                 countries = null,
@@ -86,8 +95,155 @@ class OmdbExternalMovieService(
     }
 
     override fun getMovieByImdbId(imdbId: String): ExternalMovie {
-        logger.info { "Получение данных из OMDB" }
-        TODO("Not yet implemented")
+        val uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
+            .queryParam("apiKey", apiKey)
+            .queryParam("t", imdbId)
+            .encode()
+            .toUriString()
+
+        val response = retryTemplate.execute<OmdbMovieDetailInfo, RestClientException> {
+            restTemplate.getForObject(uri, OmdbMovieDetailInfo::class.java)
+        } ?: throw ExternalApiErrorException("api.omdb.detail-info.parse-error")
+
+        val type = getMovieTypeByRawValue(response.type)
+
+        val duration = getDuration(response.runtimeInMinutes)
+
+        val (year, lastYear) = getMovieTime(response.year)
+
+        val rating = omdbRatingToInternalRating(response.rated)
+
+        val bufferedTranslator = BufferedTranslator(translatorService)
+
+        val russianTitle = bufferedTranslator.translateTask(Language.ENGLISH, Language.RUSSIAN, response.title)
+        val russianDescription = bufferedTranslator.translateTask(Language.ENGLISH, Language.RUSSIAN, response.description)
+
+        val (genres, russianGenres) = parseStrAndMakeTranslateTask(bufferedTranslator, response.genres)
+
+        val (countries, russianCountries) = parseStrAndMakeTranslateTask(bufferedTranslator, response.countries)
+
+        val (directors, russianDirectors) = parseStrAndMakeTranslateTask(bufferedTranslator, response.directors)
+
+        val (writers, russianWriters) = parseStrAndMakeTranslateTask(bufferedTranslator, response.writers)
+
+        val (actors, russianActors) = parseStrAndMakeTranslateTask(bufferedTranslator, response.actors)
+
+        val (languages, russianLanguages) = parseStrAndMakeTranslateTask(bufferedTranslator, response.languages)
+
+        bufferedTranslator.translate()
+
+        val title = LocalizedData(
+            english = response.title,
+            russian = russianTitle.get()
+        )
+
+        val description = LocalizedData(
+            english = response.description,
+            russian = russianDescription.get()
+        )
+
+        val translatedGenres = getTranslatedData(genres, russianGenres)
+        val translatedCountries = getTranslatedData(countries, russianCountries)
+        val translatedDirectors = getTranslatedData(directors, russianDirectors)
+        val translatedWriters = getTranslatedData(writers, russianWriters)
+        val translatedActors = getTranslatedData(actors, russianActors)
+        val translatedLanguages = getTranslatedData(languages, russianLanguages)
+
+        if (type == MovieType.FILM) {
+            val boxOfficeAsStr = onlyNumRegex.find(response.boxOffice!!)?.value ?: "0"
+            val boxOffice = boxOfficeAsStr.toInt()
+
+            return ExternalFilm(
+                imdbId = response.imdbID,
+                title = title,
+                description = description,
+                rating = rating,
+                year = year,
+                released = response.released,
+                genres = translatedGenres,
+                countries = translatedCountries,
+                directors = translatedDirectors,
+                writers = translatedWriters,
+                actors = translatedActors,
+                languages = translatedLanguages,
+                durationInMinutes = duration,
+                posterLink = response.poster,
+                imdbRating = response.imdbRating.toFloat(),
+                type = type,
+                boxOffice = boxOffice.toLong()
+            )
+        }
+
+        else {
+            return ExternalSeries(
+                imdbId = response.imdbID,
+                title = title,
+                description = description,
+                rating = rating,
+                year = year,
+                released = response.released,
+                genres = translatedGenres,
+                countries = translatedCountries,
+                directors = translatedDirectors,
+                writers = translatedWriters,
+                actors = translatedActors,
+                languages = translatedLanguages,
+                durationInMinutes = duration,
+                posterLink = response.poster,
+                imdbRating = response.imdbRating.toFloat(),
+                type = type,
+                seasonsCount = response.totalSeasons!!.toInt(),
+                lastYear = lastYear ?: year
+            )
+        }
+    }
+
+    private fun getTranslatedData(english: List<String>, russian: List<BufferedTranslateTask>): List<LocalizedData> {
+        return english.zip(russian).map {
+            LocalizedData(
+                english = it.first,
+                russian = it.second.get()
+            )
+        }
+    }
+
+    private fun parseStrAndMakeTranslateTask(translator: BufferedTranslator, str: String):
+            Pair<List<String>, List<BufferedTranslateTask>> {
+        val list = parseStrToList(str)
+        val russianList = list.map {
+            translator.translateTask(Language.ENGLISH, Language.RUSSIAN, it)
+        }
+
+        return Pair(list, russianList)
+    }
+
+    private fun parseStrToList(str: String): List<String> {
+        return str.split(",").map { it.trim() }.filter { it == "N/A" }
+    }
+
+    private fun getMovieTime(rawYearStr: String): MovieTime {
+        val years = rawYearStr.split("-")
+        val year = years.first().toInt()
+        val lastYear = years.getOrNull(1)?.toInt()
+
+        return MovieTime(year, lastYear)
+    }
+
+    private fun getDuration(rawDuration: String): Int {
+        val durationAsStr = onlyNumRegex.find(rawDuration)?.value ?: "0"
+        return durationAsStr.toInt()
+    }
+
+    private fun omdbRatingToInternalRating(ratingAsStr: String): Rating {
+        return try {
+            Rating.valueOf(ratingAsStr.replace("-", ""))
+        } catch (ex: IllegalArgumentException) {
+            Rating.PG12
+        }
+    }
+
+    companion object {
+        private val onlyNumRegex = "\\d+".toRegex()
     }
 
     data class OmdbSearchResponse(
@@ -108,5 +264,65 @@ class OmdbExternalMovieService(
         val type: String,
         @JsonProperty("Poster")
         val poster: String
+    )
+
+    data class OmdbMovieDetailInfo(
+        @JsonProperty("Title")
+        val title: String,
+
+        @JsonProperty("Year")
+        val year: String,
+
+        @JsonProperty("Rated")
+        val rated: String,
+
+        @JsonProperty("Released")
+        @JsonFormat(pattern = "dd MMM yyyy", locale = "US")
+        val released: LocalDate,
+
+        @JsonProperty("Runtime")
+        val runtimeInMinutes: String,
+
+        @JsonProperty("Genre")
+        val genres: String,
+        @JsonProperty("Director")
+
+        val directors: String,
+
+        @JsonProperty("Writer")
+        val writers: String,
+
+        @JsonProperty("Actors")
+        val actors: String,
+
+        @JsonProperty("Plot")
+        val description: String,
+
+        @JsonProperty("Language")
+        val languages: String,
+
+        @JsonProperty("Country")
+        val countries: String,
+
+        @JsonProperty("Poster")
+        val poster: String,
+
+        val imdbRating: String,
+
+        val imdbID: String,
+
+        @JsonProperty("Type")
+        val type: String,
+
+        @JsonProperty("BoxOffice")
+        val boxOffice: String?,
+
+        @JsonProperty("TotalSeasons")
+        val totalSeasons: String?
+    )
+
+    data class MovieTime(
+        val year: Int,
+        val lastYear: Int?
     )
 }

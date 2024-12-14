@@ -20,4 +20,5 @@ data class ExternalSeries(
     override val imdbRating: Float,
     override val type: MovieType = MovieType.SERIES,
     val seasonsCount: Int,
+    val lastYear: Int,
 ) : ExternalMovie()

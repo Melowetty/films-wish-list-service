@@ -4,6 +4,7 @@ data class ExternalShortMovie(
     val title: LocalizedData,
     val imdbId: String,
     val year: Int,
+    val lastYear: Int?,
     val rating: Rating?,
     val genres: List<LocalizedData>?,
     val countries: List<LocalizedData>?,
