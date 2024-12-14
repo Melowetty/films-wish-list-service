@@ -24,6 +24,12 @@ class YandexTranslatorService(
     private lateinit var apiKey: String
 
     override fun translate(from: Language, to: Language, texts: List<String>): List<String> {
+        return texts.chunked(50).map {
+            translateFromYandex(from, to, it)
+        }.flatten()
+    }
+
+    private fun translateFromYandex(from: Language, to: Language, texts: List<String>): List<String> {
         val body: Map<String, Any> =
             mapOf(
                 "targetLanguageCode" to to.code,
