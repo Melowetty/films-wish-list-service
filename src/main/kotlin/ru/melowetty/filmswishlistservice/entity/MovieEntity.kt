@@ -33,10 +33,10 @@ class MovieEntity(
     var released: LocalDate,
 
     @ManyToMany
-    val genres: MutableSet<GenreEntity> = mutableSetOf(),
+    val genres: MutableList<GenreEntity> = mutableListOf(),
 
     @ManyToMany
-    val countries: MutableSet<CountryEntity> = mutableSetOf(),
+    val countries: MutableList<CountryEntity> = mutableListOf(),
 
     @ManyToMany
     val directors: MutableList<DirectorEntity> = mutableListOf(),
@@ -48,7 +48,7 @@ class MovieEntity(
     val actors: MutableList<ActorEntity> = mutableListOf(),
 
     @ManyToMany
-    val languages: MutableSet<LanguageEntity> = mutableSetOf(),
+    val languages: MutableList<LanguageEntity> = mutableListOf(),
 
     @Column(name = "duration", nullable = false)
     var durationInMinutes: Int,

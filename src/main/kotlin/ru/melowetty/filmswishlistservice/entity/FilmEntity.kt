@@ -4,7 +4,6 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Inheritance
 import jakarta.persistence.InheritanceType
-import jakarta.persistence.ManyToOne
 import java.time.LocalDate
 import ru.melowetty.filmswishlistservice.model.Rating
 
@@ -16,12 +15,12 @@ class FilmEntity(
     year: Int,
     rating: Rating,
     released: LocalDate,
-    genres: MutableSet<GenreEntity> = mutableSetOf(),
-    countries: MutableSet<CountryEntity> = mutableSetOf(),
+    genres: MutableList<GenreEntity> = mutableListOf(),
+    countries: MutableList<CountryEntity> = mutableListOf(),
     directors: MutableList<DirectorEntity> = mutableListOf(),
     writers: MutableList<WriterEntity> = mutableListOf(),
     actors: MutableList<ActorEntity> = mutableListOf(),
-    languages: MutableSet<LanguageEntity> = mutableSetOf(),
+    languages: MutableList<LanguageEntity> = mutableListOf(),
     durationInMinutes: Int,
     description: LocalizedEntity,
     posterLink: String,
