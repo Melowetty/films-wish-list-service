@@ -4,6 +4,7 @@ plugins {
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("plugin.jpa") version "1.9.25"
+    kotlin("kapt") version "1.5.20"
 }
 
 group = "ru.melowetty"
@@ -41,6 +42,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
     implementation("org.liquibase:liquibase-core")
+    kapt("org.hibernate:hibernate-jpamodelgen:6.6.2.Final")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
     implementation("org.springframework.retry:spring-retry:1.3.1")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")

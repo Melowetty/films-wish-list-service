@@ -29,8 +29,21 @@ class UserMovieController(
         @NotBlank(message = "{movie.search.request.query.is-blank}")
         @Length(min = 2, max = 64, message = "{movie.search.request.query.bad-length}")
         query: String
-    ) : List<UserMovieShortDto> {
+    ): List<UserMovieShortDto> {
         return userMovieService.searchMovie(query)
+    }
+
+    @GetMapping("/list")
+    fun getAllWishMovies(
+        @RequestParam(name = "is_watched", required = false)
+        isWatched: Boolean?
+    ): List<UserMovieShortDto> {
+        return userMovieService.getAllMovies(isWatched)
+    }
+
+    @GetMapping("/rating")
+    fun getRatingOfAllWishMovies(): List<UserMovieShortDto> {
+        return userMovieService.getRatingOfAllWishMovies()
     }
 
     @GetMapping("/{id}")
@@ -38,18 +51,17 @@ class UserMovieController(
         @PathVariable(name = "id")
         @NotBlank(message = "{movie.detail-info.request.id.is-blank}")
         imdbId: String,
-    ) : UserMovieDto {
+    ): UserMovieDto {
         return userMovieService.getMovieByImdbId(imdbId)
     }
 
     @PostMapping("/{id}/wish")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun markMovieAsWish(
         @PathVariable(name = "id")
         @NotBlank(message = "{movie.detail-info.request.id.is-blank}")
         imdbId: String,
-    ) {
-        userMovieService.addMovieToWishList(imdbId)
+    ): UserMovieDto {
+        return userMovieService.addMovieToWishList(imdbId)
     }
 
     @DeleteMapping("/{id}/wish")
@@ -63,27 +75,24 @@ class UserMovieController(
     }
 
     @PostMapping("/{id}/watched")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun markMovieAsWatched(
         @PathVariable(name = "id")
         @NotBlank(message = "{movie.detail-info.request.id.is-blank}")
         imdbId: String,
-    ) {
-        userMovieService.markMovieAsWatched(imdbId)
+    ): UserMovieDto {
+        return userMovieService.markMovieAsWatched(imdbId)
     }
 
     @DeleteMapping("/{id}/watched")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun markMovieAsNotWatched(
         @PathVariable(name = "id")
         @NotBlank(message = "{movie.detail-info.request.id.is-blank}")
         imdbId: String,
-    ) {
-        userMovieService.markMovieNotWatched(imdbId)
+    ): UserMovieDto {
+        return userMovieService.markMovieNotWatched(imdbId)
     }
 
     @PostMapping("/{id}/rate")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun rateMovie(
         @PathVariable(name = "id")
         @NotBlank(message = "{movie.detail-info.request.id.is-blank}")
@@ -91,17 +100,16 @@ class UserMovieController(
         @Valid
         @RequestBody
         rateRequest: MovieUserRateRequest
-    ) {
-        userMovieService.rateMovie(imdbId, rateRequest.rate)
+    ): UserMovieDto {
+        return userMovieService.rateMovie(imdbId, rateRequest.rate)
     }
 
     @DeleteMapping("/{id}/rate")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeMovieRate(
         @PathVariable(name = "id")
         @NotBlank(message = "{movie.detail-info.request.id.is-blank}")
         imdbId: String,
-    ) {
-        userMovieService.removeMovieRate(imdbId)
+    ): UserMovieDto {
+        return userMovieService.removeMovieRate(imdbId)
     }
 }
