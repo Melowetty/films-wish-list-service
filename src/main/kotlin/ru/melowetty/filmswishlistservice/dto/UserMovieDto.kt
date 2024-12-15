@@ -1,24 +1,24 @@
 package ru.melowetty.filmswishlistservice.dto
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 import ru.melowetty.filmswishlistservice.model.Rating
 
 abstract class UserMovieDto(
     open val imdbId: String,
     open val title: String,
-    open val description: String,
-    open val rating: Rating,
+    open val description: String?,
+    open val rating: Rating?,
     open val year: Int,
-    open val released: LocalDateTime,
+    open val released: LocalDate,
     open val genres: List<GenreDto>,
     open val countries: List<CountryDto>,
     open val directors: List<DirectorDto>,
     open val writers: List<WriterDto>,
     open val actors: List<ActorDto>,
     open val languages: List<LanguageDto>,
-    open val durationInMinutes: Int,
-    open val posterLink: String,
-    open val imdbRating: Float,
+    open val durationInMinutes: Int?,
+    open val posterLink: String?,
+    open val imdbRating: Float?,
     open val isWished: Boolean,
     open val wishDetails: WishDetailsDto?
 ) {
@@ -61,7 +61,7 @@ abstract class UserMovieDto(
         result = 31 * result + writers.hashCode()
         result = 31 * result + actors.hashCode()
         result = 31 * result + languages.hashCode()
-        result = 31 * result + durationInMinutes
+        result = 31 * result + durationInMinutes.hashCode()
         result = 31 * result + posterLink.hashCode()
         result = 31 * result + imdbRating.hashCode()
         result = 31 * result + isWished.hashCode()

@@ -1,44 +1,38 @@
 package ru.melowetty.filmswishlistservice.dto
 
-import java.time.LocalDate
-import java.time.LocalDateTime
 import ru.melowetty.filmswishlistservice.model.Rating
 
-data class UserFilmDto(
+data class UserFilmShortDto(
     override val title: String,
-    override val description: String?,
     override val imdbId: String,
-    override val rating: Rating?,
     override val year: Int,
-    override val released: LocalDate,
-    override val genres: List<GenreDto>,
-    override val countries: List<CountryDto>,
-    override val directors: List<DirectorDto>,
+    override val rating: Rating?,
+    override val genres: List<String>,
+    override val countries: List<String>,
+    override val directors: List<String>,
+    override val actors: List<String>,
     override val writers: List<WriterDto>,
-    override val actors: List<ActorDto>,
     override val languages: List<LanguageDto>,
     override val durationInMinutes: Int?,
     override val posterLink: String?,
     override val imdbRating: Float?,
+    val boxOffice: Long?,
     override val isWished: Boolean,
-    override val wishDetails: WishDetailsDto,
-    val boxOffice: Long?
-) : UserMovieDto(
-    imdbId,
+    override val wishDetails: WishDetailsDto?,
+): UserMovieShortDto(
     title,
-    description,
-    rating,
+    imdbId,
     year,
-    released,
+    rating,
     genres,
     countries,
     directors,
-    writers,
     actors,
+    writers,
     languages,
     durationInMinutes,
     posterLink,
     imdbRating,
     isWished,
-    wishDetails,
+    wishDetails
 )

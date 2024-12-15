@@ -232,7 +232,7 @@ class OmdbExternalMovieService(
 
     private fun getDuration(rawDuration: String): Int? {
         val durationAsStr = onlyNumRegex.find(rawDuration)?.value ?: return null
-        return durationAsStr.toInt()
+        return durationAsStr.toIntOrNull()
     }
 
     private fun omdbRatingToInternalRating(ratingAsStr: String): Rating? {
