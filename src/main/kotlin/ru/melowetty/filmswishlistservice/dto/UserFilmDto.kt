@@ -21,7 +21,7 @@ data class UserFilmDto(
     override val posterLink: String?,
     override val imdbRating: Float?,
     override val isWished: Boolean,
-    override val wishDetails: WishDetailsDto,
+    override val wishDetails: WishDetailsDto?,
     val boxOffice: Long?
 ) : UserMovieDto(
     imdbId,

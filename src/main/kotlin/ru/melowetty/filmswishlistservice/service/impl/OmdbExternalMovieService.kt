@@ -2,7 +2,11 @@ package ru.melowetty.filmswishlistservice.service.impl
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.DateTimeException
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+import java.util.Locale
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.retry.support.RetryTemplate
@@ -100,6 +104,8 @@ class OmdbExternalMovieService(
             .encode()
             .toUriString()
 
+        val response1 = restTemplate.getForObject<Any>(uri, Any::class)
+
         val response = retryTemplate.execute<OmdbMovieDetailInfo, RestClientException> {
             restTemplate.getForObject(uri, OmdbMovieDetailInfo::class.java)
         } ?: throw ExternalApiErrorException("api.omdb.detail-info.parse-error")
@@ -109,6 +115,8 @@ class OmdbExternalMovieService(
         val duration = getDuration(response.runtimeInMinutes)
 
         val (year, lastYear) = getMovieTime(response.year)
+
+        val released = getReleaseDate(response.released) ?: LocalDate.of(year, 1, 1)
 
         val rating = omdbRatingToInternalRating(response.rated)
 
@@ -158,7 +166,7 @@ class OmdbExternalMovieService(
                 description = description,
                 rating = rating,
                 year = year,
-                released = response.released,
+                released = released,
                 genres = translatedGenres,
                 countries = translatedCountries,
                 directors = translatedDirectors,
@@ -180,7 +188,7 @@ class OmdbExternalMovieService(
                 description = description,
                 rating = rating,
                 year = year,
-                released = response.released,
+                released = released,
                 genres = translatedGenres,
                 countries = translatedCountries,
                 directors = translatedDirectors,
@@ -194,6 +202,14 @@ class OmdbExternalMovieService(
                 seasonsCount = response.totalSeasons?.toIntOrNull(),
                 lastYear = lastYear ?: year
             )
+        }
+    }
+
+    private fun getReleaseDate(raw: String): LocalDate? {
+        return try {
+            LocalDate.parse(raw, DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.US))
+        } catch (e: DateTimeParseException) {
+            null
         }
     }
 
@@ -276,8 +292,7 @@ class OmdbExternalMovieService(
         val rated: String,
 
         @JsonProperty("Released")
-        @JsonFormat(pattern = "dd MMM yyyy", locale = "US")
-        val released: LocalDate,
+        val released: String,
 
         @JsonProperty("Runtime")
         val runtimeInMinutes: String,

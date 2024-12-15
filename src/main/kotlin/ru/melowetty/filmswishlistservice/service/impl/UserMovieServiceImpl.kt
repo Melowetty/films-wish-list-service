@@ -47,7 +47,7 @@ class UserMovieServiceImpl(
 
         val movie = movieService.getMovieByImdbId(imdbId)
 
-        return mapper.movieToDto(movie)
+        return mapper.movieToDto(user.language, movie)
     }
 
     private fun getMovieByImdbIdOrCreate(imdbId: String): WishMovieEntity {

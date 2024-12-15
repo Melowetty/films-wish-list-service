@@ -1,6 +1,6 @@
 package ru.melowetty.filmswishlistservice.dto
 
 data class LanguageDto(
-    val id: String,
+    val id: Long,
     val name: String
 )

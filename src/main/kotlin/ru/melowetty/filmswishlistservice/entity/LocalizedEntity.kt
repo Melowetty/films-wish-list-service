@@ -8,9 +8,9 @@ import ru.melowetty.filmswishlistservice.entity.base.BaseEntity
 @Entity
 @Table(name = "translate")
 class LocalizedEntity(
-    @Column(length = 512, nullable = false)
+    @Column(columnDefinition = "TEXT")
     val english: String,
 
-    @Column(length = 512, nullable = false)
+    @Column(columnDefinition = "TEXT")
     val russian: String,
 ): BaseEntity<Long>()

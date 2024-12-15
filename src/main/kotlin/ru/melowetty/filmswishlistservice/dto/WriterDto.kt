@@ -1,6 +1,6 @@
 package ru.melowetty.filmswishlistservice.dto
 
 data class WriterDto(
-    val id: String,
+    val id: Long,
     val name: String
 )

@@ -39,3 +39,11 @@ ALTER TABLE users
 -- changeset denismalinin:1734200846070-10
 ALTER TABLE movie
     ALTER COLUMN imdb_rating TYPE NUMERIC(2, 1);
+
+-- changeset denismalinin:1734200846070-11
+ALTER TABLE translate
+    ALTER COLUMN russian TYPE TEXT;
+
+-- changeset denismalinin:1734200846070-12
+ALTER TABLE translate
+    ALTER COLUMN english TYPE TEXT;
