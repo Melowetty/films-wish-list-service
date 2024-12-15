@@ -35,3 +35,7 @@ ALTER TABLE movie
 -- changeset denismalinin:1734200846070-9
 ALTER TABLE users
     ADD COLUMN language VARCHAR(64) NOT NULL default 'RUSSIAN';
+
+-- changeset denismalinin:1734200846070-10
+ALTER TABLE movie
+    ALTER COLUMN imdb_rating TYPE NUMERIC(2, 1);

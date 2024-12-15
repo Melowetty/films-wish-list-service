@@ -59,7 +59,7 @@ class MovieEntity(
     @Column
     var posterLink: String?,
 
-    @Column
+    @Column(columnDefinition = "NUMERIC(2, 1)")
     var imdbRating: Float?,
 ) : BaseAuditEntity<Long>() {
 

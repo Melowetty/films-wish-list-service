@@ -149,8 +149,8 @@ class OmdbExternalMovieService(
         val translatedLanguages = getTranslatedData(languages, russianLanguages)
 
         if (type == MovieType.FILM) {
-            val boxOfficeAsStr = onlyNumRegex.find(response.boxOffice!!)?.value ?: "0"
-            val boxOffice = boxOfficeAsStr.toInt()
+            val boxOfficeAsStr = onlyNumRegex.findAll(response.boxOffice!!).map { it.value }.joinToString("")
+            val boxOffice = boxOfficeAsStr.toIntOrNull()
 
             return ExternalFilm(
                 imdbId = response.imdbID,
@@ -169,7 +169,7 @@ class OmdbExternalMovieService(
                 posterLink = response.poster,
                 imdbRating = response.imdbRating.toFloatOrNull(),
                 type = type,
-                boxOffice = boxOffice.toLong()
+                boxOffice = boxOffice?.toLong()
             )
         }
 
@@ -223,7 +223,7 @@ class OmdbExternalMovieService(
     private fun getMovieTime(rawYearStr: String): MovieTime {
         val years = rawYearStr.split("–")
         val year = years.first().toInt()
-        val lastYear = years.getOrNull(1)?.toInt()
+        val lastYear = years.getOrNull(1)?.toIntOrNull()
 
         return MovieTime(year, lastYear)
     }
