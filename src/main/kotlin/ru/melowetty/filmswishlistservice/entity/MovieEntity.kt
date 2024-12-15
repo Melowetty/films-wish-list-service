@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.LocalDate
 import org.hibernate.annotations.NaturalId
@@ -18,8 +19,8 @@ class MovieEntity(
     @NaturalId
     val imdbId: String,
 
-    @Column(nullable = false)
-    var title: String,
+    @ManyToOne
+    var title: LocalizedEntity,
 
     @Column(nullable = false)
     val year: Int,
@@ -52,8 +53,8 @@ class MovieEntity(
     @Column(name = "duration", nullable = false)
     var durationInMinutes: Int,
 
-    @Column(nullable = false)
-    var description: String,
+    @ManyToOne
+    var description: LocalizedEntity,
 
     @Column(nullable = false)
     var posterLink: String,

@@ -4,6 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Inheritance
 import jakarta.persistence.InheritanceType
+import jakarta.persistence.ManyToOne
 import java.time.LocalDate
 import ru.melowetty.filmswishlistservice.model.Rating
 
@@ -11,7 +12,7 @@ import ru.melowetty.filmswishlistservice.model.Rating
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 class FilmEntity(
     imdbId: String,
-    title: String,
+    title: LocalizedEntity,
     year: Int,
     rating: Rating,
     released: LocalDate,
@@ -22,7 +23,7 @@ class FilmEntity(
     actors: MutableList<ActorEntity> = mutableListOf(),
     languages: MutableSet<LanguageEntity> = mutableSetOf(),
     durationInMinutes: Int,
-    description: String,
+    description: LocalizedEntity,
     posterLink: String,
     imdbRating: Float,
 

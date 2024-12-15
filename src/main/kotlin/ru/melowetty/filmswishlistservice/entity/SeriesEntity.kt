@@ -11,7 +11,7 @@ import ru.melowetty.filmswishlistservice.model.Rating
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 class SeriesEntity(
     imdbId: String,
-    title: String,
+    title: LocalizedEntity,
     year: Int,
     rating: Rating,
     released: LocalDate,
@@ -22,7 +22,7 @@ class SeriesEntity(
     actors: MutableList<ActorEntity> = mutableListOf(),
     languages: MutableSet<LanguageEntity> = mutableSetOf(),
     durationInMinutes: Int,
-    description: String,
+    description: LocalizedEntity,
     posterLink: String,
     imdbRating: Float,
 
