@@ -22,4 +22,22 @@ data class UserFilmDto(
     override val isWished: Boolean,
     override val wishDetails: WishDetailsDto,
     val boxOffice: Long
-) : UserMovieDto()
+) : UserMovieDto(
+    title,
+    description,
+    imdbId,
+    rating,
+    year,
+    released,
+    genres,
+    countries,
+    directors,
+    writers,
+    actors,
+    languages,
+    durationInMinutes,
+    posterLink,
+    imdbRating,
+    isWished,
+    wishDetails,
+)

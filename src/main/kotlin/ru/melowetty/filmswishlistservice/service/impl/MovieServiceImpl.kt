@@ -51,7 +51,7 @@ class MovieServiceImpl(
         val externalMovie = externalMovieService.getMovieByImdbId(imdbId)
 
         val title = localizeService.localize(externalMovie.title)
-        val description = localizeService.localize(externalMovie.description)
+        val description = externalMovie.description?.let { localizeService.localize(it) }
 
         val actors = externalMovie.actors.map { actorService.getOrCreate(it) }.toMutableList()
         val countries = externalMovie.countries.map { countryService.getOrCreate(it) }.toMutableList()

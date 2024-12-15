@@ -25,9 +25,9 @@ class MovieEntity(
     @Column(nullable = false)
     val year: Int,
 
-    @Column(nullable = false)
+    @Column
     @Enumerated(value = EnumType.STRING)
-    var rating: Rating,
+    var rating: Rating?,
 
     @Column(nullable = false)
     var released: LocalDate,
@@ -50,17 +50,17 @@ class MovieEntity(
     @ManyToMany
     val languages: MutableList<LanguageEntity> = mutableListOf(),
 
-    @Column(name = "duration", nullable = false)
-    var durationInMinutes: Int,
+    @Column(name = "duration")
+    var durationInMinutes: Int?,
 
     @ManyToOne
-    var description: LocalizedEntity,
+    var description: LocalizedEntity?,
 
-    @Column(nullable = false)
-    var posterLink: String,
+    @Column
+    var posterLink: String?,
 
-    @Column(nullable = false)
-    var imdbRating: Float,
+    @Column
+    var imdbRating: Float?,
 ) : BaseAuditEntity<Long>() {
 
     override fun hashCode(): Int {

@@ -13,7 +13,7 @@ class SeriesEntity(
     imdbId: String,
     title: LocalizedEntity,
     year: Int,
-    rating: Rating,
+    rating: Rating?,
     released: LocalDate,
     genres: MutableList<GenreEntity> = mutableListOf(),
     countries: MutableList<CountryEntity> = mutableListOf(),
@@ -21,13 +21,13 @@ class SeriesEntity(
     writers: MutableList<WriterEntity> = mutableListOf(),
     actors: MutableList<ActorEntity> = mutableListOf(),
     languages: MutableList<LanguageEntity> = mutableListOf(),
-    durationInMinutes: Int,
-    description: LocalizedEntity,
-    posterLink: String,
-    imdbRating: Float,
+    durationInMinutes: Int?,
+    description: LocalizedEntity?,
+    posterLink: String?,
+    imdbRating: Float?,
 
     @Column(name = "seasons_count")
-    var seasonsCount: Int,
+    var seasonsCount: Int?,
 
     @Column(name = "last_year")
     var lastYear: Int,

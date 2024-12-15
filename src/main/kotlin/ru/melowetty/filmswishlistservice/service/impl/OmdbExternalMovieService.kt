@@ -9,6 +9,7 @@ import org.springframework.retry.support.RetryTemplate
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.getForObject
 import org.springframework.web.util.UriComponentsBuilder
 import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
 import ru.melowetty.filmswishlistservice.model.BufferedTranslateTask
@@ -97,7 +98,7 @@ class OmdbExternalMovieService(
     override fun getMovieByImdbId(imdbId: String): ExternalMovie {
         val uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
             .queryParam("apiKey", apiKey)
-            .queryParam("t", imdbId)
+            .queryParam("i", imdbId)
             .encode()
             .toUriString()
 
@@ -168,7 +169,7 @@ class OmdbExternalMovieService(
                 languages = translatedLanguages,
                 durationInMinutes = duration,
                 posterLink = response.poster,
-                imdbRating = response.imdbRating.toFloat(),
+                imdbRating = response.imdbRating.toFloatOrNull(),
                 type = type,
                 boxOffice = boxOffice.toLong()
             )
@@ -190,9 +191,9 @@ class OmdbExternalMovieService(
                 languages = translatedLanguages,
                 durationInMinutes = duration,
                 posterLink = response.poster,
-                imdbRating = response.imdbRating.toFloat(),
+                imdbRating = response.imdbRating.toFloatOrNull(),
                 type = type,
-                seasonsCount = response.totalSeasons!!.toInt(),
+                seasonsCount = response.totalSeasons?.toIntOrNull(),
                 lastYear = lastYear ?: year
             )
         }
@@ -229,16 +230,16 @@ class OmdbExternalMovieService(
         return MovieTime(year, lastYear)
     }
 
-    private fun getDuration(rawDuration: String): Int {
-        val durationAsStr = onlyNumRegex.find(rawDuration)?.value ?: "0"
+    private fun getDuration(rawDuration: String): Int? {
+        val durationAsStr = onlyNumRegex.find(rawDuration)?.value ?: return null
         return durationAsStr.toInt()
     }
 
-    private fun omdbRatingToInternalRating(ratingAsStr: String): Rating {
+    private fun omdbRatingToInternalRating(ratingAsStr: String): Rating? {
         return try {
             Rating.valueOf(ratingAsStr.replace("-", ""))
         } catch (ex: IllegalArgumentException) {
-            Rating.PG12
+            return null
         }
     }
 
@@ -305,7 +306,7 @@ class OmdbExternalMovieService(
         val countries: String,
 
         @JsonProperty("Poster")
-        val poster: String,
+        val poster: String?,
 
         val imdbRating: String,
 
@@ -317,7 +318,7 @@ class OmdbExternalMovieService(
         @JsonProperty("BoxOffice")
         val boxOffice: String?,
 
-        @JsonProperty("TotalSeasons")
+        @JsonProperty("totalSeasons")
         val totalSeasons: String?
     )
 

@@ -2,23 +2,24 @@ package ru.melowetty.filmswishlistservice.model
 
 import java.time.LocalDate
 
-abstract class ExternalMovie {
-    abstract val imdbId: String
-    abstract val title: LocalizedData
-    abstract val description: LocalizedData
-    abstract val rating: Rating
-    abstract val year: Int
-    abstract val released: LocalDate
-    abstract val genres: List<LocalizedData>
-    abstract val countries: List<LocalizedData>
-    abstract val directors: List<LocalizedData>
-    abstract val writers: List<LocalizedData>
-    abstract val actors: List<LocalizedData>
-    abstract val languages: List<LocalizedData>
-    abstract val durationInMinutes: Int
-    abstract val posterLink: String
-    abstract val imdbRating: Float
-    abstract val type: MovieType
+abstract class ExternalMovie(
+    open val imdbId: String,
+    open val title: LocalizedData,
+    open val description: LocalizedData?,
+    open val rating: Rating?,
+    open val year: Int,
+    open val released: LocalDate,
+    open val genres: List<LocalizedData>,
+    open val countries: List<LocalizedData>,
+    open val directors: List<LocalizedData>,
+    open val writers: List<LocalizedData>,
+    open val actors: List<LocalizedData>,
+    open val languages: List<LocalizedData>,
+    open val durationInMinutes: Int?,
+    open val posterLink: String?,
+    open val imdbRating: Float?,
+    open val type: MovieType
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -49,7 +50,7 @@ abstract class ExternalMovie {
         result = 31 * result + title.hashCode()
         result = 31 * result + description.hashCode()
         result = 31 * result + rating.hashCode()
-        result = 31 * result + year
+        year?.let { result = 31 * result + it }
         result = 31 * result + released.hashCode()
         result = 31 * result + genres.hashCode()
         result = 31 * result + countries.hashCode()
@@ -57,7 +58,7 @@ abstract class ExternalMovie {
         result = 31 * result + writers.hashCode()
         result = 31 * result + actors.hashCode()
         result = 31 * result + languages.hashCode()
-        result = 31 * result + durationInMinutes
+        durationInMinutes?.let { result = 31 * result + it.hashCode() }
         result = 31 * result + posterLink.hashCode()
         result = 31 * result + imdbRating.hashCode()
         return result

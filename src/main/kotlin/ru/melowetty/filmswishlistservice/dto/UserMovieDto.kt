@@ -3,24 +3,25 @@ package ru.melowetty.filmswishlistservice.dto
 import java.time.LocalDateTime
 import ru.melowetty.filmswishlistservice.model.Rating
 
-abstract class UserMovieDto {
-    abstract val imdbId: String
-    abstract val title: String
-    abstract val description: String
-    abstract val rating: Rating
-    abstract val year: Int
-    abstract val released: LocalDateTime
-    abstract val genres: List<GenreDto>
-    abstract val countries: List<CountryDto>
-    abstract val directors: List<DirectorDto>
-    abstract val writers: List<WriterDto>
-    abstract val actors: List<ActorDto>
-    abstract val languages: List<LanguageDto>
-    abstract val durationInMinutes: Int
-    abstract val posterLink: String
-    abstract val imdbRating: Float
-    abstract val isWished: Boolean
-    abstract val wishDetails: WishDetailsDto?
+abstract class UserMovieDto(
+    open val imdbId: String,
+    open val title: String,
+    open val description: String,
+    open val rating: Rating,
+    open val year: Int,
+    open val released: LocalDateTime,
+    open val genres: List<GenreDto>,
+    open val countries: List<CountryDto>,
+    open val directors: List<DirectorDto>,
+    open val writers: List<WriterDto>,
+    open val actors: List<ActorDto>,
+    open val languages: List<LanguageDto>,
+    open val durationInMinutes: Int,
+    open val posterLink: String,
+    open val imdbRating: Float,
+    open val isWished: Boolean,
+    open val wishDetails: WishDetailsDto?
+) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
