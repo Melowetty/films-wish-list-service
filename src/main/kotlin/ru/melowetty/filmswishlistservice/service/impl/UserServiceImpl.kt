@@ -40,6 +40,12 @@ class UserServiceImpl(
     }
 
     override fun getUserInfo(): UserDto {
+        val user = getUserByAuth()
+
+        return userMapper.toDto(user)
+    }
+
+    override fun getUserByAuth(): UserEntity {
         val user = SecurityContextHolder.getContext().authentication.principal
 
         var username: String? = null
@@ -57,7 +63,7 @@ class UserServiceImpl(
             throw InvalidUserDataException("exception.invalid-user-data")
         }
 
-        return userMapper.toDto(entity)
+        return entity
     }
 
     override fun loadUserByUsername(username: String): UserDetails {
