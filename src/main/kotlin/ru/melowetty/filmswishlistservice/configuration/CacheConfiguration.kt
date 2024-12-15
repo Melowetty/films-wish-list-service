@@ -15,8 +15,7 @@ class CacheConfiguration {
     @Bean
     fun cacheConfigurationBean(): RedisCacheConfiguration {
         return RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(60))
-            .disableCachingNullValues()
+            .entryTtl(Duration.ofHours(12))
             .serializeValuesWith(SerializationPair.fromSerializer<Any>(GenericJackson2JsonRedisSerializer()))
     }
 }

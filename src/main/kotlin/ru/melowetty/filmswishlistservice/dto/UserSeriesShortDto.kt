@@ -16,6 +16,7 @@ data class UserSeriesShortDto(
     override val durationInMinutes: Int?,
     override val posterLink: String?,
     override val imdbRating: Float?,
+    val lastYear: Int,
     val seasonCount: Int?,
     override val isWished: Boolean,
     override val wishDetails: WishDetailsDto?,

@@ -1,6 +1,5 @@
 package ru.melowetty.filmswishlistservice.mapper
 
-import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import ru.melowetty.filmswishlistservice.Extensions.Companion.getValueByLanguage
 import ru.melowetty.filmswishlistservice.Extensions.Companion.toLocalRatingSystem
@@ -65,6 +64,7 @@ class UserMovieMapper(
                 title = movie.title.getValueByLanguage(lang),
                 imdbId = movie.imdbId,
                 year = movie.year,
+                lastYear = movie.lastYear,
                 rating = movie.rating?.toLocalRatingSystem(lang),
                 released = movie.released,
                 description = movie.description?.getValueByLanguage(lang),
@@ -115,6 +115,7 @@ class UserMovieMapper(
                 title = movie.title.getValueByLanguage(lang),
                 imdbId = movie.imdbId,
                 year = movie.year,
+                lastYear = movie.lastYear,
                 rating = movie.rating?.toLocalRatingSystem(lang),
                 released = movie.released,
                 description = movie.description?.getValueByLanguage(lang),
@@ -171,6 +172,7 @@ class UserMovieMapper(
                 title = movie.title.getValueByLanguage(lang),
                 imdbId = movie.imdbId,
                 year = movie.year,
+                lastYear = movie.lastYear,
                 rating = movie.rating?.toLocalRatingSystem(lang),
                 genres = movie.genres.map { it.name.getValueByLanguage(lang) },
                 countries = movie.countries.map { it.name.getValueByLanguage(lang) },
@@ -219,6 +221,7 @@ class UserMovieMapper(
                 title = movie.title.getValueByLanguage(lang),
                 imdbId = movie.imdbId,
                 year = movie.year,
+                lastYear = movie.lastYear,
                 rating = movie.rating?.toLocalRatingSystem(lang),
                 genres = movie.genres.map { it.name.getValueByLanguage(lang) },
                 countries = movie.countries.map { it.name.getValueByLanguage(lang) },

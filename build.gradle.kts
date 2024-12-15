@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("plugin.jpa") version "1.9.25"
     kotlin("kapt") version "1.5.20"
+    kotlin("plugin.noarg") version "2.1.0"
 }
 
 group = "ru.melowetty"
@@ -14,6 +15,11 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+noArg {
+    annotation("ru.melowetty.filmswishlistservice.annotation.NoArg")
+    invokeInitializers = true
 }
 
 allOpen {

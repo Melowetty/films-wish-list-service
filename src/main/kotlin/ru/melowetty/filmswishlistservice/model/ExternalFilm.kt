@@ -1,7 +1,9 @@
 package ru.melowetty.filmswishlistservice.model
 
 import java.time.LocalDate
+import ru.melowetty.filmswishlistservice.annotation.NoArg
 
+@NoArg
 data class ExternalFilm(
     override val imdbId: String,
     override val title: LocalizedData,

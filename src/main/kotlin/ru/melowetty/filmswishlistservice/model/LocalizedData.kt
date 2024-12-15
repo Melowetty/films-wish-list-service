@@ -1,7 +1,9 @@
 package ru.melowetty.filmswishlistservice.model
 
 import java.util.Locale
+import ru.melowetty.filmswishlistservice.annotation.NoArg
 
+@NoArg
 data class LocalizedData(
     val english: String,
     val russian: String

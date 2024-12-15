@@ -1,12 +1,5 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
-import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.filter
-import kotlin.collections.forEach
-import kotlin.collections.forEachIndexed
-import kotlin.collections.isNotEmpty
-import kotlin.collections.map
 import kotlin.collections.set
 import mu.KotlinLogging
 import org.springframework.cache.CacheManager
@@ -28,8 +21,8 @@ class CacheableTranslatorService(
 
         val translates = HashMap<String, String?>()
 
-        texts.forEach {
-            translates[it] = cache[it]?.get() as String?
+        for (text in texts) {
+            translates[text] = cache.get(text)?.get() as String?
         }
 
         val nonCachedValues = translates.filter {
