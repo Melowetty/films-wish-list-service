@@ -76,9 +76,8 @@ class UserMovieServiceImpl(
 
     override fun removeMovieFromWishList(imdbId: String) {
         val user = userService.getUserByAuth()
-        val movie = movieService.getMovieByImdbId(imdbId)
 
-        userMovieRepository.deleteByUserAndMovie(user, movie)
+        userMovieRepository.deleteByUserAndMovie_ImdbId(user, imdbId)
     }
 
     override fun markMovieAsWatched(imdbId: String): UserMovieDto {

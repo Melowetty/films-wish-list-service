@@ -12,7 +12,7 @@ interface WishMovieRepository : JpaRepository<WishMovieEntity, Long> {
 
     fun findByUser_IdAndMovie_ImdbIdIn(id: Long, imdbIds: Collection<String>): List<WishMovieEntity>
 
-    fun deleteByUserAndMovie(user: UserEntity, movie: MovieEntity)
+    fun deleteByUserAndMovie_ImdbId(user: UserEntity, imdbId: String)
 
     fun findByUser_IdAndMovie_ImdbId(id: Long, imdbId: String): WishMovieEntity?
 
