@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import ru.melowetty.filmswishlistservice.entity.UserEntity
 import ru.melowetty.filmswishlistservice.model.GoogleOAuthUser
+import ru.melowetty.filmswishlistservice.model.Language
 import ru.melowetty.filmswishlistservice.model.Provider
 import ru.melowetty.filmswishlistservice.model.Role
 import ru.melowetty.filmswishlistservice.repository.UserRepository
@@ -32,6 +33,7 @@ class GoogleOAuthService(
                 password = Provider.GOOGLE.name,
                 provider = Provider.GOOGLE,
                 roles = authorities,
+                language = Language.RUSSIAN
             )
 
             userRepository.save(userEntity)

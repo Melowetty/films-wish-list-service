@@ -13,6 +13,7 @@ import jakarta.persistence.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import ru.melowetty.filmswishlistservice.entity.base.BaseAuditEntity
+import ru.melowetty.filmswishlistservice.model.Language
 import ru.melowetty.filmswishlistservice.model.Provider
 import ru.melowetty.filmswishlistservice.model.Role
 
@@ -32,6 +33,10 @@ class UserEntity(
 
     @Enumerated(value = EnumType.STRING)
     var provider: Provider,
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    var language: Language,
 
     @Column
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)

@@ -14,6 +14,6 @@ class AuthController(
 ) {
     @PostMapping("register")
     fun register(@RequestBody request: UserRegisterRequest) {
-        userService.createBasicUser(request.username, request.password)
+        userService.createBasicUser(request.username, request.password, request.language)
     }
 }

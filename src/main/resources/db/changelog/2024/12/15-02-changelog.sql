@@ -31,3 +31,7 @@ ALTER TABLE movie
 -- changeset denismalinin:1734200846070-8
 ALTER TABLE movie
     ALTER description_id DROP NOT NULL;
+
+-- changeset denismalinin:1734200846070-9
+ALTER TABLE users
+    ADD COLUMN language VARCHAR(64) NOT NULL default 'RUSSIAN';

@@ -32,7 +32,7 @@ class UserMovieServiceImpl(
                 mapper.toShortDto(existsMovies[it.imdbId]!!)
             }
             else {
-                mapper.movieToShortDto(it)
+                mapper.movieToShortDto(user.language, it)
             }
         }
     }

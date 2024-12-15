@@ -12,6 +12,7 @@ import ru.melowetty.filmswishlistservice.exception.InvalidUserDataException
 import ru.melowetty.filmswishlistservice.exception.UserNotFoundException
 import ru.melowetty.filmswishlistservice.mapper.UserMapper
 import ru.melowetty.filmswishlistservice.model.GoogleOAuthUser
+import ru.melowetty.filmswishlistservice.model.Language
 import ru.melowetty.filmswishlistservice.model.Provider
 import ru.melowetty.filmswishlistservice.model.Role
 import ru.melowetty.filmswishlistservice.repository.UserRepository
@@ -24,14 +25,15 @@ class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val userMapper: UserMapper
 ) : UserService {
-    override fun createBasicUser(username: String, password: String): UserDto {
+    override fun createBasicUser(username: String, password: String, language: Language): UserDto {
         val encodedPassword = passwordEncoder.encode(password)
 
         val user = UserEntity(
             username = username,
             password = encodedPassword,
             provider = Provider.BASIC,
-            roles = mutableListOf(Role.USER)
+            roles = mutableListOf(Role.USER),
+            language = language
         )
 
         val entity = userRepository.save(user)

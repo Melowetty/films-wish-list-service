@@ -62,9 +62,7 @@ class OmdbExternalMovieService(
             val originalTitle = it.title
             val translatedTitle = translatedTitles[index]
 
-            val years = it.year.split("-")
-            val year = years.first().toInt()
-            val lastYear = years.getOrNull(1)?.toInt()
+            val (year, lastYear) = getMovieTime(it.year)
 
             ExternalShortMovie(
                 title = LocalizedData(
@@ -219,11 +217,11 @@ class OmdbExternalMovieService(
     }
 
     private fun parseStrToList(str: String): List<String> {
-        return str.split(",").map { it.trim() }.filter { it == "N/A" }
+        return str.split(",").map { it.trim() }.filter { it != "N/A" }
     }
 
     private fun getMovieTime(rawYearStr: String): MovieTime {
-        val years = rawYearStr.split("-")
+        val years = rawYearStr.split("–")
         val year = years.first().toInt()
         val lastYear = years.getOrNull(1)?.toInt()
 

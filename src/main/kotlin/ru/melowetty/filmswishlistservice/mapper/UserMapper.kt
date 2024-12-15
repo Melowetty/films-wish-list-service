@@ -11,6 +11,7 @@ class UserMapper {
             username = entity.username,
             provider = entity.provider,
             roles = entity.roles,
+            language = entity.language,
             created = entity.created,
             edited = entity.modified,
         )

@@ -2,6 +2,7 @@ package ru.melowetty.filmswishlistservice.controller.request
 
 import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.Length
+import ru.melowetty.filmswishlistservice.model.Language
 
 data class UserRegisterRequest(
     @Length(min = 3, max = 255)
@@ -11,4 +12,6 @@ data class UserRegisterRequest(
     @Length(min = 8)
     @NotBlank
     val password: String,
+
+    val language: Language,
 )
