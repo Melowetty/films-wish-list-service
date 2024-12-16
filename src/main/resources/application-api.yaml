@@ -2,6 +2,7 @@ api:
   omdb:
     base-url: https://omdbapi.com
     api-key: ${OMDB_API_KEY}
+    max-threads: 5
   yandex-translator:
     base-url: https://translate.api.cloud.yandex.net/translate/v2
     api-key: ${YANDEX_TRANSLATE_API_KEY}

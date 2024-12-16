@@ -7,7 +7,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.Locale
+import java.util.concurrent.Semaphore
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.retry.support.RetryTemplate
 import org.springframework.stereotype.Service
@@ -33,7 +35,10 @@ import ru.melowetty.filmswishlistservice.structure.BufferedTranslator
 class OmdbExternalMovieService(
     private val restTemplate: RestTemplate,
     private val retryTemplate: RetryTemplate,
-    private val translatorService: TranslatorService
+    private val translatorService: TranslatorService,
+
+    @Qualifier("omdb_semaphore")
+    private val semaphore: Semaphore
 ) : ExternalMovieService {
     private val logger = KotlinLogging.logger { }
 
@@ -44,6 +49,21 @@ class OmdbExternalMovieService(
     private lateinit var apiKey: String
 
     override fun searchMovie(query: String): List<ExternalShortMovie> {
+        try {
+            semaphore.acquire()
+            logger.info { "Получение информации о фильмах по запросу $query в OMDB API" }
+            val result = searchMovieInternal(query)
+
+            semaphore.release()
+
+            return result
+        } catch (e: RuntimeException) {
+            semaphore.release()
+            throw e
+        }
+    }
+
+    private fun searchMovieInternal(query: String): List<ExternalShortMovie> {
         val uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
             .queryParam("apiKey", apiKey)
             .queryParam("s", query)
@@ -53,6 +73,8 @@ class OmdbExternalMovieService(
         val response = retryTemplate.execute<OmdbSearchResponse, RestClientException> {
             restTemplate.getForObject(uri, OmdbSearchResponse::class.java)
         } ?: throw ExternalApiErrorException("api.omdb.search.parse-error")
+
+        semaphore.release()
 
         if (response.response.not()) return listOf()
         if (response.search == null) {
@@ -98,13 +120,28 @@ class OmdbExternalMovieService(
     }
 
     override fun getMovieByImdbId(imdbId: String): ExternalMovie {
+        try {
+            semaphore.acquire()
+
+            logger.info { "Получение информации о фильме с id $imdbId в OMDB API" }
+
+            val result = getMovieByImdbIdInternal(imdbId)
+
+            semaphore.release()
+
+            return result
+        } catch (e: RuntimeException) {
+            semaphore.release()
+            throw e
+        }
+    }
+
+    private fun getMovieByImdbIdInternal(imdbId: String): ExternalMovie {
         val uri = UriComponentsBuilder.fromHttpUrl(baseUrl)
             .queryParam("apiKey", apiKey)
             .queryParam("i", imdbId)
             .encode()
             .toUriString()
-
-        val response1 = restTemplate.getForObject<Any>(uri, Any::class)
 
         val response = retryTemplate.execute<OmdbMovieDetailInfo, RestClientException> {
             restTemplate.getForObject(uri, OmdbMovieDetailInfo::class.java)

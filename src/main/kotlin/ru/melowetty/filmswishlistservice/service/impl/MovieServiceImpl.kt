@@ -1,5 +1,8 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import ru.melowetty.filmswishlistservice.entity.ActorEntity
 import ru.melowetty.filmswishlistservice.entity.CountryEntity
@@ -30,20 +33,30 @@ class MovieServiceImpl(
     private val directorService: BaseLocalizedService<DirectorEntity>,
     private val genreService: BaseLocalizedService<GenreEntity>,
     private val languageService: BaseLocalizedService<LanguageEntity>,
-    private val writerService: BaseLocalizedService<WriterEntity>
+    private val writerService: BaseLocalizedService<WriterEntity>,
+
+    @Qualifier("fetch_data_threads")
+    private val executorService: ExecutorService
 ): MovieService {
     override fun searchMovie(query: String): List<MovieEntity> {
         val movies = externalMovieService.searchMovie(query)
         val existsMovies = movieRepository.findByImdbIdIn(movies.map { it.imdbId })
-            .associateBy { it.imdbId }
+            .associateBy { it.imdbId }.toMutableMap()
 
-        return movies.map {
-            if (existsMovies.containsKey(it.imdbId)) {
-                existsMovies.getValue(it.imdbId)
-            }
-            else {
+        val nonExistsMoviesCreatingTasks = movies.filter { !existsMovies.containsKey(it.imdbId) }.map {
+            Callable {
                 createMovie(it.imdbId)
             }
+        }
+
+        val tasks = executorService.invokeAll(nonExistsMoviesCreatingTasks)
+
+        tasks.map { it.get() }.forEach {
+            existsMovies[it.imdbId] = it
+        }
+
+        return movies.map {
+            existsMovies.getValue(it.imdbId)
         }
     }
 
