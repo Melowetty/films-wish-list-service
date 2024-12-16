@@ -10,6 +10,7 @@ data class UserDto(
     val provider: Provider,
     val roles: List<Role>,
     val language: Language,
+    val telegramId: Long?,
     val created: LocalDateTime,
     val edited: LocalDateTime,
 )

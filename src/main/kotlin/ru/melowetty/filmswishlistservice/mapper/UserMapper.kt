@@ -15,6 +15,7 @@ class UserMapper {
             language = entity.language,
             created = entity.created,
             edited = entity.modified,
+            telegramId = entity.telegramId
         )
     }
 
