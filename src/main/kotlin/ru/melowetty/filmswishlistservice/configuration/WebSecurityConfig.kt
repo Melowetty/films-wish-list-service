@@ -23,7 +23,7 @@ class WebSecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
-                    .requestMatchers("/", "/auth**").permitAll()
+                    .requestMatchers("/", "/auth**", "/swagger-ui**").permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2Login {

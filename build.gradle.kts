@@ -35,6 +35,9 @@ repositories {
 
 extra["springCloudVersion"] = "2023.0.3"
 
+val springDocStarterVersion = "2.2.0"
+val springDocKotlinVersion = "1.7.0"
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -58,6 +61,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
     implementation("org.springframework.retry:spring-retry:1.3.1")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocStarterVersion}")
+    runtimeOnly("org.springdoc:springdoc-openapi-kotlin:${springDocKotlinVersion}")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
