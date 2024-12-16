@@ -4,6 +4,9 @@ plugins {
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
     kotlin("plugin.jpa") version "1.9.25"
+    kotlin("kapt") version "1.5.20"
+    kotlin("plugin.noarg") version "2.1.0"
+    id("jacoco")
 }
 
 group = "ru.melowetty"
@@ -15,11 +18,25 @@ java {
     }
 }
 
+noArg {
+    annotation("ru.melowetty.filmswishlistservice.annotation.NoArg")
+    invokeInitializers = true
+}
+
+allOpen {
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
 repositories {
     mavenCentral()
 }
 
 extra["springCloudVersion"] = "2023.0.3"
+
+val springDocStarterVersion = "2.2.0"
+val springDocKotlinVersion = "1.7.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -27,10 +44,26 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
+
+    implementation("org.springframework.kafka:spring-kafka")
+
+    implementation("org.telegram:telegrambots-client:8.0.0")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+
     implementation("org.liquibase:liquibase-core")
+    kapt("org.hibernate:hibernate-jpamodelgen:6.6.2.Final")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+    implementation("org.springframework.retry:spring-retry:1.3.1")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocStarterVersion}")
+    runtimeOnly("org.springdoc:springdoc-openapi-kotlin:${springDocKotlinVersion}")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -39,7 +72,10 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-13")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("com.h2database:h2")
 }
 
 dependencyManagement {
@@ -62,4 +98,36 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+    classDirectories.setFrom(files(classDirectories.files.map {
+        fileTree(it).apply {
+            exclude("ru/melowetty/filmswishlistservice/**/*Dto.*")
+            exclude("ru/melowetty/filmswishlistservice/model/**")
+            exclude("ru/melowetty/filmswishlistservice/controller/response/**")
+            exclude("ru/melowetty/filmswishlistservice/controller/request/**")
+            exclude("ru/melowetty/filmswishlistservice/notification/model/**")
+            exclude("ru/melowetty/filmswishlistservice/entity/**")
+        }
+    }))
+
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(false)
+        csv.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+
+tasks.test {
+    testLogging {
+        events("passed", "failed", "skipped")
+    }
+
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.bootJar {
+    archiveFileName.set("app-standalone.jar")
 }
