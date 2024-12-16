@@ -9,4 +9,5 @@ interface UserService : UserDetailsService {
     fun createBasicUser(username: String, password: String, language: Language): UserDto
     fun getUserInfo(): UserDto
     fun getUserByAuth(): UserEntity
+    fun patchUser(changes: HashMap<String, Any?>): UserDto
 }

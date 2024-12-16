@@ -93,7 +93,6 @@ class MovieServiceImpl(
                 genres = genres,
                 languages = languages,
                 writers = writers,
-
             )
 
             return movieRepository.save(entity)

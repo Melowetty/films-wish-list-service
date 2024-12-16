@@ -33,7 +33,8 @@ class UserServiceImpl(
             password = encodedPassword,
             provider = Provider.BASIC,
             roles = mutableListOf(Role.USER),
-            language = language
+            language = language,
+            telegramId = null,
         )
 
         val entity = userRepository.save(user)
@@ -66,6 +67,25 @@ class UserServiceImpl(
         }
 
         return entity
+    }
+
+    override fun patchUser(changes: HashMap<String, Any?>): UserDto {
+        val user = getUserByAuth()
+
+        changes.forEach { (field, value) ->
+            when(field.lowercase()) {
+                "language" -> {
+                    user.language = (value as String?)?.let { Language.valueOf(it) } ?: return@forEach
+                }
+                "telegramId" -> {
+                    user.telegramId = value.toString().toLongOrNull()
+                }
+            }
+        }
+
+        userRepository.save(user)
+
+        return userMapper.toDto(user)
     }
 
     override fun loadUserByUsername(username: String): UserDetails {

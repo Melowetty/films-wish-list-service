@@ -55,3 +55,7 @@ ALTER TABLE movie
 -- changeset denismalinin:1734200846070-14
 ALTER TABLE movie
     ADD COLUMN last_check DATE NOT NULL default CURRENT_DATE;
+
+-- changeset denismalinin:1734200846070-15
+ALTER TABLE users
+    ADD COLUMN telegram_id BIGINT default NULL;

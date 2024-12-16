@@ -39,6 +39,9 @@ class UserEntity(
     var language: Language,
 
     @Column
+    var telegramId: Long?,
+
+    @Column
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     val wishMovies: MutableList<WishMovieEntity> = mutableListOf()
 
