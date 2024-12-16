@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/search?apiKey=test&s=testQuery"
+  },
+  "response": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status": 200,
+    "jsonBody": {
+      "Search": [
+        {
+          "Title": "The Queen's Gambit",
+          "Year": "2020",
+          "imdbID": "tt10048342",
+          "Type": "series",
+          "Poster": "https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_SX300.jpg"
+        },
+        {
+          "Title": "Gambit",
+          "Year": "2012",
+          "imdbID": "tt0404978",
+          "Type": "movie",
+          "Poster": "https://m.media-amazon.com/images/M/MV5BY2JmZWQ5NWEtNmVmZC00YTE2LTg5NTItYTZhZDI0YTk1NmNkXkEyXkFqcGc@._V1_SX300.jpg"
+        }
+      ],
+      "totalResults": "2",
+      "Response": "True"
+    }
+  }
+}

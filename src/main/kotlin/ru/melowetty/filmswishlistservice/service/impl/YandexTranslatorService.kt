@@ -8,6 +8,7 @@ import org.springframework.retry.support.RetryTemplate
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
+import ru.melowetty.filmswishlistservice.annotation.Generated
 import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
 import ru.melowetty.filmswishlistservice.model.Language
 import ru.melowetty.filmswishlistservice.service.TranslatorService
@@ -52,10 +53,12 @@ class YandexTranslatorService(
         return res.translations.map { it.text }
     }
 
+    @Generated
     data class YandexApiTranslationsResponse(
         val translations: List<YandexApiTranslateResponse>
     )
 
+    @Generated
     data class YandexApiTranslateResponse(
         val text: String
     )

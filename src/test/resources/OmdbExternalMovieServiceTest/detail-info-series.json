@@ -1,0 +1,41 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/search?apiKey=test&i=tt10048342"
+  },
+  "response": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status": 200,
+    "jsonBody": {
+      "Title": "The Queen's Gambit",
+      "Year": "2020–2020",
+      "Rated": "TV-MA",
+      "Released": "23 Oct 2020",
+      "Runtime": "395 min",
+      "Genre": "Drama",
+      "Director": "N/A",
+      "Writer": "Scott Frank, Allan Scott",
+      "Actors": "Anya Taylor-Joy, Chloe Pirrie",
+      "Plot": "Test description",
+      "Language": "English, French",
+      "Country": "United States",
+      "Awards": "Won 11 Primetime Emmys. 58 wins & 53 nominations total",
+      "Poster": "https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_SX300.jpg",
+      "Ratings": [
+        {
+          "Source": "Internet Movie Database",
+          "Value": "8.5/10"
+        }
+      ],
+      "Metascore": "N/A",
+      "imdbRating": "8.5",
+      "imdbVotes": "586,936",
+      "imdbID": "tt10048342",
+      "Type": "series",
+      "totalSeasons": "1",
+      "Response": "True"
+    }
+  }
+}

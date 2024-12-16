@@ -1,8 +1,6 @@
 package ru.melowetty.filmswishlistservice.service.impl
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.DateTimeException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -15,8 +13,8 @@ import org.springframework.retry.support.RetryTemplate
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.getForObject
 import org.springframework.web.util.UriComponentsBuilder
+import ru.melowetty.filmswishlistservice.annotation.Generated
 import ru.melowetty.filmswishlistservice.exception.ExternalApiErrorException
 import ru.melowetty.filmswishlistservice.model.BufferedTranslateTask
 import ru.melowetty.filmswishlistservice.model.ExternalFilm
@@ -298,6 +296,7 @@ class OmdbExternalMovieService(
         private val onlyNumRegex = "\\d+".toRegex()
     }
 
+    @Generated
     data class OmdbSearchResponse(
         @JsonProperty("Response")
         val response: Boolean,
@@ -305,6 +304,7 @@ class OmdbExternalMovieService(
         val search: List<OmdbSearchResult>?
     )
 
+    @Generated
     data class OmdbSearchResult(
         @JsonProperty("Title")
         val title: String,
@@ -318,6 +318,7 @@ class OmdbExternalMovieService(
         val poster: String
     )
 
+    @Generated
     data class OmdbMovieDetailInfo(
         @JsonProperty("Title")
         val title: String,
