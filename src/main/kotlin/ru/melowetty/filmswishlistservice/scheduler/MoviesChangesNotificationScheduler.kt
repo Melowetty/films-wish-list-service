@@ -1,17 +1,16 @@
 package ru.melowetty.filmswishlistservice.scheduler
 
-import java.time.LocalDate
 import mu.KotlinLogging
 import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import ru.melowetty.filmswishlistservice.Extensions.Companion.getValueByLanguage
 import ru.melowetty.filmswishlistservice.entity.FilmEntity
 import ru.melowetty.filmswishlistservice.entity.SeriesEntity
 import ru.melowetty.filmswishlistservice.entity.UserEntity
 import ru.melowetty.filmswishlistservice.mapper.UserMapper
 import ru.melowetty.filmswishlistservice.notification.model.MovieChanges
-import ru.melowetty.filmswishlistservice.notification.model.MovieIsReleasedNotification
 import ru.melowetty.filmswishlistservice.notification.model.MoviesChangesNotification
 import ru.melowetty.filmswishlistservice.notification.model.SeriesChanges
 import ru.melowetty.filmswishlistservice.repository.MovieRepository
@@ -28,22 +27,27 @@ class MoviesChangesNotificationScheduler(
     private val logger = KotlinLogging.logger {  }
 
     @Scheduled(cron = "0 0 12 * * *")
+    @Transactional
     fun checkMoviesChanges() {
         logger.info { "Начата проверка на изменения в фильмах, которые есть у человека в виш листе" }
 
         val movies = movieRepository.getAllIdsWhichChanged().toHashSet()
 
-        var slice = userRepository.findAll(PageRequest.of(1, 500))
+        var slice = userRepository.findAll(PageRequest.of(0, 500))
 
         var notifyForUsers: Long = 0
 
-        while (!slice.isEmpty) {
+        while (!slice.isLast) {
             val users = slice.get()
 
             notifyForUsers += users.map { processUser(it, movies) }.filter { it }.count()
 
-            slice = userRepository.findAll(slice.nextPageable())
+            slice = userRepository.findAll(slice.nextOrLastPageable())
         }
+
+        val users = slice.get()
+
+        notifyForUsers += users.map { processUser(it, movies) }.filter { it }.count()
 
         val moviesEntity = movieRepository.getAllMoviesWhichChanged().map {
             it.isChanged = false

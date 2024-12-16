@@ -33,7 +33,8 @@ class GoogleOAuthService(
                 password = Provider.GOOGLE.name,
                 provider = Provider.GOOGLE,
                 roles = authorities,
-                language = Language.RUSSIAN
+                language = Language.RUSSIAN,
+                telegramId = null,
             )
 
             userRepository.save(userEntity)

@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import ru.melowetty.filmswishlistservice.Extensions.Companion.getValueByLanguage
 import ru.melowetty.filmswishlistservice.entity.UserEntity
 import ru.melowetty.filmswishlistservice.mapper.UserMapper
@@ -23,6 +24,7 @@ class MovieIsReleasedCheckScheduler(
     private val logger = KotlinLogging.logger {  }
 
     @Scheduled(cron = "0 0 10 * * *")
+    @Transactional
     fun getMovieWhichTodayIsReleased() {
         logger.info { "Начата проверка вышел ли фильм, который есть у человека в виш листе" }
 
@@ -30,17 +32,21 @@ class MovieIsReleasedCheckScheduler(
 
         val movies = movieRepository.getAllIdsWhichReleasedToday(today).toHashSet()
 
-        var slice = userRepository.findAll(PageRequest.of(1, 500))
+        var slice = userRepository.findAll(PageRequest.of(0, 500))
 
         var notifyForUsers: Long = 0
 
-        while (!slice.isEmpty) {
+        while (!slice.isLast) {
             val users = slice.get()
 
             notifyForUsers += users.map { processUser(it, today, movies) }.filter { it }.count()
 
             slice = userRepository.findAll(slice.nextPageable())
         }
+
+        val users = slice.get()
+
+        notifyForUsers += users.map { processUser(it, today, movies) }.filter { it }.count()
 
         logger.info { "Закончена проверка вышел ли фильм, который есть у человека в виш листе, " +
                 "разослано $notifyForUsers уведомлений" }

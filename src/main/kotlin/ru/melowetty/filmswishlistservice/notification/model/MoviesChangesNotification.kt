@@ -5,4 +5,4 @@ import ru.melowetty.filmswishlistservice.notification.Notification
 data class MoviesChangesNotification(
     val seriesChanges: List<SeriesChanges>,
     val movieChanges: List<MovieChanges>
-): Notification
+): Notification()

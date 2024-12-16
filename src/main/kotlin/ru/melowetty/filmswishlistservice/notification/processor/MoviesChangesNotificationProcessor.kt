@@ -25,7 +25,7 @@ class MoviesChangesNotificationProcessor: TelegramNotificationProcessor<MoviesCh
             .text("*🔔 Сводка *\n" +
                     "За эту неделю произошли следующие изменения:\n" +
                     "\n" + seriesChanges.joinToString("\n") +
-                filmsChanges.joinToString("\n")
+                "\n" + filmsChanges.joinToString("\n")
             )
             .parseMode(ParseMode.MARKDOWN)
             .build()

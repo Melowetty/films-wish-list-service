@@ -1,3 +1,3 @@
 package ru.melowetty.filmswishlistservice.notification
 
-interface Notification
+open class Notification
