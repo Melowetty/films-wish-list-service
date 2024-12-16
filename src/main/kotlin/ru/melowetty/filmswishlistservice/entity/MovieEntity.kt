@@ -61,6 +61,10 @@ class MovieEntity(
 
     @Column(columnDefinition = "NUMERIC(2, 1)")
     var imdbRating: Float?,
+
+    var isChanged: Boolean = false,
+
+    var lastCheck: LocalDate = LocalDate.now(),
 ) : BaseAuditEntity<Long>() {
 
     override fun hashCode(): Int {

@@ -26,4 +26,12 @@ class MultiThreadingConfig {
             10
         )
     }
+
+    @Bean
+    @Qualifier("scheduled_movies_check_changes")
+    fun moviesCheckChangesExecutor(): ExecutorService {
+        return Executors.newFixedThreadPool(
+            10
+        )
+    }
 }

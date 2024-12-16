@@ -47,3 +47,11 @@ ALTER TABLE translate
 -- changeset denismalinin:1734200846070-12
 ALTER TABLE translate
     ALTER COLUMN english TYPE TEXT;
+
+-- changeset denismalinin:1734200846070-13
+ALTER TABLE movie
+    ADD COLUMN is_changed BOOLEAN NOT NULL default false;
+
+-- changeset denismalinin:1734200846070-14
+ALTER TABLE movie
+    ADD COLUMN last_check DATE NOT NULL default CURRENT_DATE;
