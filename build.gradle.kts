@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
     kotlin("kapt") version "1.5.20"
     kotlin("plugin.noarg") version "2.1.0"
+    id("jacoco")
 }
 
 group = "ru.melowetty"
@@ -44,6 +45,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
 
+    implementation("org.telegram:telegrambots-client:8.0.0")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
@@ -62,6 +65,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation("org.wiremock.integrations.testcontainers:wiremock-testcontainers-module:1.0-alpha-13")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
@@ -85,4 +89,27 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+//    afterEvaluate {
+//        classDirectories.setFrom(files(classDirectories.files.forEach {
+//            fileTree(it.name, 'ru/melowetty/model/**')
+//            fileTree(dir: it, exclude: 'ru/melowetty/controller/request/**')
+//        }))
+//    }
+
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(false)
+        csv.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+    }
+}
+
+tasks.test {
+    testLogging {
+        events("passed", "failed", "skipped")
+    }
+    finalizedBy(tasks.jacocoTestReport)
 }

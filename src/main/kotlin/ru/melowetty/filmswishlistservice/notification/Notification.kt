@@ -1,0 +1,3 @@
+package ru.melowetty.filmswishlistservice.notification
+
+interface Notification
