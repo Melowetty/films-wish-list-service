@@ -26,6 +26,7 @@ import ru.melowetty.filmswishlistservice.model.ExternalShortMovie
 import ru.melowetty.filmswishlistservice.model.LocalizedData
 import ru.melowetty.filmswishlistservice.model.MovieType
 import ru.melowetty.filmswishlistservice.model.Rating
+import ru.melowetty.filmswishlistservice.repository.MovieRepository
 import ru.melowetty.filmswishlistservice.service.impl.MovieServiceImpl
 
 @Testcontainers
@@ -39,6 +40,9 @@ import ru.melowetty.filmswishlistservice.service.impl.MovieServiceImpl
 @AutoConfigureMockMvc(addFilters = false)
 @ExtendWith(MockitoExtension::class)
 class MovieServiceImplTest {
+    @Autowired
+    lateinit var movieRepository: MovieRepository
+
     @MockBean
     lateinit var externalMovieService: ExternalMovieService
 
@@ -110,6 +114,10 @@ class MovieServiceImplTest {
         Assertions.assertTrue(entity is FilmEntity)
         entity as FilmEntity
         Assertions.assertEquals(57, entity.boxOffice)
+
+        val isCreated = movieRepository.existsByImdbId("test2")
+
+        Assertions.assertTrue(isCreated)
     }
 
     @Test
@@ -179,5 +187,9 @@ class MovieServiceImplTest {
         entity as SeriesEntity
         Assertions.assertEquals(3, entity.seasonsCount)
         Assertions.assertEquals(2025, entity.lastYear)
+
+        val isCreated = movieRepository.existsByImdbId("test3")
+
+        Assertions.assertTrue(isCreated)
     }
 }
