@@ -45,6 +45,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2")
 
+    implementation("org.springframework.kafka:spring-kafka")
+
     implementation("org.telegram:telegrambots-client:8.0.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")

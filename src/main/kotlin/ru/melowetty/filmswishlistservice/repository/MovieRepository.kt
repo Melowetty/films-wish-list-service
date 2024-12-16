@@ -19,4 +19,10 @@ interface MovieRepository : JpaRepository<MovieEntity, Long>, JpaSpecificationEx
 
     @Query("select m.id from MovieEntity m where m.released = ?1")
     fun getAllIdsWhichReleasedToday(released: LocalDate): List<Long>
+
+    @Query("select m.id from MovieEntity m where m.isChanged = true")
+    fun getAllIdsWhichChanged(): List<Long>
+
+    @Query("select m from MovieEntity m where m.isChanged = true")
+    fun getAllMoviesWhichChanged(): List<MovieEntity>
 }

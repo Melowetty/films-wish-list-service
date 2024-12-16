@@ -6,5 +6,78 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/bitnami/redis/data
+  postgresdb:
+    image: postgres
+    restart: always
+    env_file: ./.env
+    environment:
+      - POSTGRES_USER=$DB_USERNAME
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME
+    ports:
+      - "5433:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - internal
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    expose:
+      - 2181
+    networks:
+      - internal
+    volumes:
+      - type: volume
+        source: zksingle-ksingle_zookeeper-data
+        target: /var/lib/zookeeper/data
+      - type: volume
+        source: zksingle-ksingle_zookeeper-log
+        target: /var/lib/zookeeper/log
+      - type: volume
+        source: zksingle-ksingle_zookeeper-secrets
+        target: /etc/zookeeper/secrets
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    restart: always
+    depends_on:
+      - zookeeper
+    expose:
+      - "9092"
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://localhost:29092,EXTERNAL://31.129.105.79:29093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+      ZOOKEEPER_SASL_ENABLED: 'false'
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_AUTO_CREATE_TOPICS: true
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+    networks:
+      - internal
+    volumes:
+      - type: volume
+        source: zksingle-ksingle_broker-data
+        target: /var/lib/kafka/data
+      - type: volume
+        source: zksingle-ksingle_broker-secrets
+        target: /etc/kafka/secrets
+      - ./:/etc/kafka
+networks:
+  internal:
 volumes:
+  db:
   redis_data:
+  zksingle-ksingle_broker-data:
+  zksingle-ksingle_broker-secrets:
+  zksingle-ksingle_zookeeper-data:
+  zksingle-ksingle_zookeeper-log:
+  zksingle-ksingle_zookeeper-secrets:

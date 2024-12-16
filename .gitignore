@@ -40,3 +40,4 @@ out/
 .kotlin
 .DS_Store
 amplicode.xml
+.env
