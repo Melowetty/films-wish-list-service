@@ -77,7 +77,7 @@ class UserServiceImpl(
                 "language" -> {
                     user.language = (value as String?)?.let { Language.valueOf(it) } ?: return@forEach
                 }
-                "telegramId" -> {
+                "telegramid" -> {
                     user.telegramId = value.toString().toLongOrNull()
                 }
             }
