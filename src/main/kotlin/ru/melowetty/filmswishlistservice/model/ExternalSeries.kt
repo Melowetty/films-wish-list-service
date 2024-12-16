@@ -1,5 +1,6 @@
 package ru.melowetty.filmswishlistservice.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 import ru.melowetty.filmswishlistservice.annotation.NoArg
 
@@ -10,6 +11,7 @@ data class ExternalSeries(
     override val description: LocalizedData?,
     override val rating: Rating?,
     override val year: Int,
+    @JsonFormat(pattern = "yyyy-MM-dd")
     override val released: LocalDate,
     override val genres: List<LocalizedData>,
     override val countries: List<LocalizedData>,

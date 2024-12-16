@@ -1,5 +1,6 @@
 package ru.melowetty.filmswishlistservice.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.time.LocalDate
 import ru.melowetty.filmswishlistservice.annotation.NoArg
 
@@ -10,6 +11,7 @@ abstract class ExternalMovie(
     open val description: LocalizedData?,
     open val rating: Rating?,
     open val year: Int,
+    @JsonFormat(pattern = "yyyy-MM-dd")
     open val released: LocalDate,
     open val genres: List<LocalizedData>,
     open val countries: List<LocalizedData>,
