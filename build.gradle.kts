@@ -101,6 +101,17 @@ tasks.jacocoTestReport {
 //        }))
 //    }
 
+    classDirectories.setFrom(files(classDirectories.files.map {
+        fileTree(it).apply {
+            exclude("ru/melowetty/filmswishlistservice/**/*Dto.*")
+            exclude("ru/melowetty/filmswishlistservice/model/**")
+            exclude("ru/melowetty/filmswishlistservice/controller/response/**")
+            exclude("ru/melowetty/filmswishlistservice/controller/request/**")
+            exclude("ru/melowetty/filmswishlistservice/notification/model/**")
+            exclude("ru/melowetty/filmswishlistservice/entity/**")
+        }
+    }))
+
     dependsOn(tasks.test)
     reports {
         xml.required.set(false)
@@ -113,5 +124,6 @@ tasks.test {
     testLogging {
         events("passed", "failed", "skipped")
     }
+
     finalizedBy(tasks.jacocoTestReport)
 }
