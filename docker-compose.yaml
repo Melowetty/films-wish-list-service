@@ -1,4 +1,31 @@
 services:
+  wish-list-service:
+    image: melowetty/wish-list-service
+    restart: always
+    depends_on:
+      - redis
+      - postgresdb
+      - kafka
+    build:
+      context: .
+    environment:
+      - SPRING_PROFILES_ACTIVE=$ACTIVE_PROFILE
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:$POSTGRESDB_DOCKER_PORT/$DB_NAME
+      - SPRING_DATASOURCE_USERNAME=$DB_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=$DB_PASSWORD
+      - BOT_TOKEN=$BOT_TOKEN
+      - GOOGLE_OAUTH_CLIENT_ID=$GOOGLE_OAUTH_CLIENT_ID
+      - GOOGLE_OAUTH_CLIENT_SECRET=$GOOGLE_OAUTH_CLIENT_SECRET
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_HOST=$REDIS_HOST
+      - OMDB_API_KEY=$OMDB_API_KEY
+      - YANDEX_TRANSLATE_API_KEY=$YANDEX_TRANSLATE_API_KEY
+      - KAFKA_BOOTSTRAP_SERVERS=$KAFKA_SERVERS
+      - SERVER_PORT=$SERVER_PORT
+    env_file: ./.env
+    networks:
+      - internal
+
   redis:
     image: redis:7.2.0-alpine3.18
     restart: always

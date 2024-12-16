@@ -101,13 +101,6 @@ tasks.withType<Test> {
 }
 
 tasks.jacocoTestReport {
-//    afterEvaluate {
-//        classDirectories.setFrom(files(classDirectories.files.forEach {
-//            fileTree(it.name, 'ru/melowetty/model/**')
-//            fileTree(dir: it, exclude: 'ru/melowetty/controller/request/**')
-//        }))
-//    }
-
     classDirectories.setFrom(files(classDirectories.files.map {
         fileTree(it).apply {
             exclude("ru/melowetty/filmswishlistservice/**/*Dto.*")
@@ -133,4 +126,8 @@ tasks.test {
     }
 
     finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.bootJar {
+    archiveFileName.set("app-standalone.jar")
 }
